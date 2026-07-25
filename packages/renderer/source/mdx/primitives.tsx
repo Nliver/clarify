@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Info } from 'lucide-react'
+import { CalendarDays, Info } from 'lucide-react'
 import { createElement, type ComponentPropsWithoutRef, type ReactNode } from 'react'
 
 import { PageActions } from '../app/PageActions'
@@ -8,6 +8,41 @@ import { Code, CodeGroup, Pre } from '../components/Code'
 import { Image } from '../components/Image'
 
 type WrapperProps = { children: ReactNode }
+
+type ReleaseProps = { version: string; date?: string; children: ReactNode }
+type ReleaseItemProps = { title: string; children: ReactNode }
+
+export function Release(arg0: ReleaseProps) {
+  const { version, date, children } = arg0
+  return (
+    <section id={version} className="clarify-release my-14 grid gap-7 border-t border-(--clarify-theme-tokens-colors-border) pt-8 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-12">
+      <header className="self-start sm:sticky sm:top-24">
+        <h2 className="m-0! inline-flex rounded-(--clarify-theme-tokens-radius-md) bg-(--clarify-ui-accent-background) px-2.5 py-1 text-sm font-semibold text-(--clarify-ui-accent-text)">
+          {version}
+        </h2>
+        {date
+          ? (
+              <time dateTime={date} className="mt-3 flex items-center gap-1.5 text-xs text-(--clarify-ui-text-faint)">
+                <CalendarDays className="size-3.5" aria-hidden="true" />
+                {date}
+              </time>
+            )
+          : null}
+      </header>
+      <div className="min-w-0 space-y-10">{children}</div>
+    </section>
+  )
+}
+
+export function ReleaseItem(arg0: ReleaseItemProps) {
+  const { title, children } = arg0
+  return (
+    <div className="clarify-release-item min-w-0">
+      <h3 className="m-0! text-lg font-semibold text-(--clarify-ui-text)">{title}</h3>
+      <div className="mt-3 min-w-0 text-sm/6 text-(--clarify-ui-text-soft) *:first:mt-0 *:last:mb-0">{children}</div>
+    </div>
+  )
+}
 
 export function wrapper(arg0: WrapperProps) {
   const { children } = arg0

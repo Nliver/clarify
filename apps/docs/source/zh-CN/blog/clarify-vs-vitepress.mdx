@@ -1,0 +1,74 @@
+---
+title: 'Clarify 与 VitePress：开发者文档还是内容型 Vue SSG？'
+description: "VitePress 是由 Vite 和 Vue 驱动的高速内容型静态站点生成器；Clarify 是由 MDX、React 和 OpenAPI 驱动的开发者文档发布工具。两者都保留源文件并生成可迁移静态站点，差异在于内置了多少领域能力。"
+keywords: ['clarify', 'documentation', 'blog', 'clarify-vs-vitepress']
+---
+
+# Clarify 与 VitePress：开发者文档还是内容型 Vue SSG？
+
+VitePress 是由 Vite 和 Vue 驱动的高速内容型静态站点生成器；Clarify 是由 MDX、React 和 OpenAPI 驱动的开发者文档发布工具。两者都保留源文件并生成可迁移静态站点，差异在于内置了多少领域能力。
+
+## 两者分别提供什么
+
+| 维度 | VitePress | Clarify |
+|---|---|---|
+| 内容 runtime | Markdown 编译为 Vue components | Markdown/MDX 编译为 React components |
+| 代码写作 | 丰富 Markdown 扩展、Shiki 标注、code groups、导入 snippets | Shiki、code groups、Mermaid 与文档型 MDX primitives |
+| API 文档 | 需要 package、自定义 Vue component 或独立工具 | 内置 OpenAPI Reference、嵌入与请求工作台 |
+| 搜索 | 内置 MiniSearch 本地索引或 Algolia | 内置 Pagefind 静态索引与 section results |
+| 主题 | 扩展默认主题或替换根 `Layout` | Presets 和 tokens；有插件与 slots，但主题替换 API 更窄 |
+| 版本 | 无原生文档版本工作流 | 暂无原生文档版本工作流 |
+| 部署 | 静态 `.vitepress/dist` | 静态 output，另含 raw content、OpenAPI、`llms.txt` 和 MCP metadata |
+
+## VitePress 擅长 Markdown 与 Vue 组合
+
+VitePress 默认写作体验非常完整：tables、alerts、语法高亮、行高亮与 focus、diff、code groups、导入源码片段和包含 Markdown sections 都是内置能力。每个 Markdown 页面都会成为 Vue component，因此能使用插值、directives、`<script setup>`、局部样式、导入组件和 VitePress runtime data。
+
+对使用 Vue 编写产品指南、框架手册或内容型技术站点的团队，这是直接且灵活的模型。Vite 的开发速度，以及透传 Vite、Vue、markdown-it 配置的能力，使它更像强大基础设施，而不是受限的文档产品。
+
+Clarify 使用 MDX 与 React，内置面向任务的 primitives，也允许页面内 React components。但它最主要的差异不是通用组件组合，而是把文档导航、OpenAPI、搜索、本地化、静态产物与 AI 访问整合在一起。
+
+## Clarify 负责完整 OpenAPI 工作流
+
+VitePress 可以显示 Vue component 或插件能够渲染的任何内容，包括第三方 API Reference。但它没有定义原生 OpenAPI 内容契约、operation routes、验证链路或请求工作台。
+
+Clarify 会发现与 MDX 并列的 OpenAPI JSON/YAML，在构建期验证并生成 Reference，把选定 operation 嵌入业务指南，并让读者构造和发送请求。团队可以在 VitePress 上完成这些能力，但需要自己选择 renderer 并维护集成。
+
+## 两者都有本地搜索，但实现不同
+
+VitePress 可生成浏览器内 MiniSearch 索引，并支持多语言 UI 与索引选项；它也集成 Algolia DocSearch 和可选 Ask AI。Clarify 为每个 locale 生成 Pagefind 索引，展示带高亮的页面与章节结果。
+
+两种本地方案都不是托管相关性与分析服务。VitePress 在需要时有明确的 Algolia 路径；Clarify 用原始 Markdown、`llms.txt` 和可下载 MCP 搜索索引补充本地搜索，但不提供终端用户 AI 聊天面板。
+
+## 主题自由与集成式 shell
+
+VitePress custom theme 的核心是实现一个 `Layout` component。团队可以扩展默认主题、注册全局 Vue components 或完全替换主题，build hooks 还能转换 page data、head 和最终 HTML。这比 Clarify 当前的 presets、设计 tokens 与部分 runtime slots 自由得多。
+
+Clarify 的交换条件是一致性：文档 shell、tabs、递归导航、locale 行为、OpenAPI UI、content actions、响应式布局与搜索一起设计和测试。默认形态合适时更快，不合适时也更受限制。
+
+## 国际化、版本与托管
+
+两者都支持 locale 目录和不同语言的导航或主题 label。VitePress 明确说明根路径语言重定向需要托管层配置，RTL 目前也需要额外处理；Clarify 在一个配置契约中负责 locale-prefixed routes、语言切换、RTL 和缺失翻译行为。
+
+两者当前都没有 Docusaurus 或部分托管平台提供的冻结式并行文档版本工作流。团队通常要使用独立部署或自定义路由，这应被当作项目工作估算。
+
+两者都生成可部署到任意主机的静态文件。Clarify 默认额外输出机器可读内容；VitePress 则为自行创建输出链路的团队提供更广泛 hooks。
+
+## 应该选择谁？
+
+使用 Vue 的团队如果重视优秀的 Markdown 与代码表达、完整主题控制、Vite 扩展能力和小而通用的核心，应选择 VitePress。当 API 文档不是核心，或团队已有偏好的 API component 时尤其合适。
+
+当 OpenAPI、交互 endpoint 指南、多语言 Pagefind 搜索、AI-readable artifacts 和 MCP discovery 应无需选包和接线就集成工作时，选择 Clarify。不要假设其中任何一个已经包含原生文档版本化。
+
+## 来源与范围
+
+- [VitePress 概览](https://vitepress.dev/guide/what-is-vitepress)
+- [Markdown 扩展](https://vitepress.dev/guide/markdown)
+- [在 Markdown 中使用 Vue](https://vitepress.dev/guide/using-vue)
+- [国际化](https://vitepress.dev/guide/i18n)
+- [搜索](https://vitepress.dev/reference/default-theme-search)
+- [自定义主题](https://vitepress.dev/guide/custom-theme)
+- [部署](https://vitepress.dev/guide/deploy)
+- [Clarify 功能](/features)
+- [Clarify OpenAPI 支持](/features/openapi)
+- [Clarify 部署](/guides/deployment)

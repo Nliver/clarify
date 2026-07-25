@@ -18,6 +18,7 @@ import { applyThemeVariables, themeEditorPresets, ThemeEditor } from './theme/Th
 import { ThemeProvider, useTheme } from './theme/ThemeProvider'
 import { ThemeToggle } from './theme/ThemeToggle'
 import { themePresets, themeBootstrapScript } from './theme/variables'
+import { Release, ReleaseItem } from './mdx/primitives'
 import type { Config, RouteItem, RouteSection, RenderOptions, ServerRenderOptions } from './types'
 import { remToPx } from './utils/remToPx'
 
@@ -33,7 +34,7 @@ export type { RuntimeSlotEntry, RuntimeSlotRegistry, UISlotRegistration, UISlotN
 export { AppShell, render, ConfigProvider, OpenApiSpecsContext, useConfig, useConfigUpdater, useConfigUpdaterOptional, useOpenApiSpecs, BuiltWithClarify, PageBanner, PageFooter, ThemeProvider, ThemeToggle, ThemeEditor, useTheme, SectionProvider, useSectionStore, remToPx, applyThemeVariables, themeEditorPresets, themePresets, themeBootstrapScript, createContentDiagnosticComponent, createOpenApiRouteComponent }
 
 // Built-in MDX and UI components
-export { Button, Callout, Card, CardGroup, Code, CodeGroup, Collapse, Pre, Prose, Heading, Logo, Mermaid, GridPattern, HeroPattern, Feedback, Step, Steps, Tab, Tabs, Tag, WebFrame }
+export { Button, Callout, Card, CardGroup, Code, CodeGroup, Collapse, Pre, Prose, Heading, Logo, Mermaid, GridPattern, HeroPattern, Feedback, Step, Steps, Tab, Tabs, Tag, WebFrame, Release, ReleaseItem }
 
 // MDX integration helpers
 export { DocShell, useMDXComponents, markdownRemarkPlugins, parseCodeMeta }

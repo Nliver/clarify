@@ -20,10 +20,10 @@ export default defineConfig({
     },
   },
   navigation: {
-    links: [
+    menus: [
       { label: { 'en-US': 'Guides', 'zh-CN': '指南' }, href: '/guides/writing-content' },
       { label: { 'en-US': 'API', 'zh-CN': '接口' }, href: '/api' },
-      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify', external: true },
+      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify' },
     ],
     tabs: [
       {

@@ -19,7 +19,7 @@ describe('clarifyProjectConfigSchema', () => {
         },
       },
       navigation: {
-        links: [{ label: 'GitHub', href: 'https://github.com', external: true }],
+        menus: [{ label: 'GitHub', href: 'https://github.com' }],
         tabs: [
           { tab: { 'zh-CN': '产品', 'en-US': 'Product' }, icon: 'Boxes', pages: [{ group: 'Overview', pages: ['index', { openapi: 'api', title: { 'zh-CN': '接口', 'en-US': 'API' } }] }] },
         ],
@@ -40,7 +40,7 @@ describe('clarifyProjectConfigSchema', () => {
       siteUrl: 'https://docs.example.com',
       features: { repository: { url: 'https://github.com/acme/docs', branch: 'main', directory: 'docs/source' } },
       navigation: {
-        links: [{ label: 'GitHub', href: 'https://github.com', external: true }],
+        menus: [{ label: 'GitHub', href: 'https://github.com' }],
         tabs: [
           { tab: { 'zh-CN': '产品', 'en-US': 'Product' }, icon: 'Boxes', pages: [{ group: 'Overview', pages: ['index', { openapi: 'api', title: { 'zh-CN': '接口', 'en-US': 'API' } }] }] },
         ],
@@ -73,7 +73,7 @@ describe('clarifyProjectConfigSchema', () => {
       },
       navigation: {
         tabs: [{ pages: 'FileTree', icon: 'BookOpen', tab: 'Docs' }],
-        links: [{ external: true, href: 'https://example.com', label: 'Website' }],
+        menus: [{ href: 'https://example.com', label: 'Website' }],
       },
       layout: { tabs: 'navbar' },
       routePrefix: '/docs',
@@ -208,7 +208,7 @@ describe('resolveProjectConfig', () => {
       homeUrl: 'https://example.com',
       favicon: '/favicon.svg',
       navigation: {
-        links: [{ label: 'GitHub', href: 'https://github.com' }],
+        menus: [{ label: 'GitHub', href: 'https://github.com' }],
         tabs: [{ tab: 'Product', pages: [{ group: 'Getting Started', pages: ['index', 'quickstart'] }] }],
       },
       banner: { content: 'v2 is out', dismissible: true },
@@ -239,7 +239,7 @@ describe('resolveProjectConfig', () => {
     expect(result.homeUrl).toBe('https://example.com')
     expect(result.favicon).toBe('/favicon.svg')
     expect(result.assetPrefix).toBe('/')
-    expect(result.navigation?.links).toEqual([{ label: 'GitHub', href: 'https://github.com' }])
+    expect(result.navigation?.menus).toEqual([{ label: 'GitHub', href: 'https://github.com' }])
     expect(result.banner).toEqual({ content: 'v2 is out', dismissible: true })
     expect(result.footer).toEqual({ copyright: '© 2026' })
     expect(result.variables).toEqual({

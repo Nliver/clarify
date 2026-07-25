@@ -1,0 +1,69 @@
+---
+title: 'Clarify 与 Docusaurus：文档产品还是 React 框架？'
+description: "Docusaurus 和 Clarify 都是开源、Git 驱动的静态文档工具，因此它们的内容所有权模式比托管平台更接近。主要差异在抽象层级：Docusaurus 是拥有可替换插件和主题的成熟 React 站点框架；Clarify 则是更有主张的开发者文档产品，把 OpenAPI、本地搜索、多语言路由和 AI 产物整合…"
+keywords: ['clarify', 'documentation', 'blog', 'clarify-vs-docusaurus']
+---
+
+# Clarify 与 Docusaurus：文档产品还是 React 框架？
+
+Docusaurus 和 Clarify 都是开源、Git 驱动的静态文档工具，因此它们的内容所有权模式比托管平台更接近。主要差异在抽象层级：Docusaurus 是拥有可替换插件和主题的成熟 React 站点框架；Clarify 则是更有主张的开发者文档产品，把 OpenAPI、本地搜索、多语言路由和 AI 产物整合进一次构建。
+
+## 实际能力对照
+
+| 维度 | Docusaurus | Clarify |
+|---|---|---|
+| 基础 | 带内容插件与主题的 React SSG | 由文档 CLI 驱动的 React renderer |
+| 内容 | MDX v3、React imports、remark/rehype/recma 插件 | Markdown/MDX、React imports、内置文档与 OpenAPI 组件 |
+| 版本化 | 原生冻结文档版本和版本感知导航 | 暂无原生多版本文档并行发布 |
+| API Reference | 通常通过社区或第三方插件增加 | OpenAPI 3.0/3.1 是一等内容源 |
+| 搜索 | 一等 Algolia 集成；Typesense 和本地搜索来自社区方案 | 内置按 locale 建索引的静态 Pagefind 搜索 |
+| 扩展 | 广泛的插件生命周期、主题组件、wrap 与 eject | 类型化构建 hooks 和 runtime slots，生态更小 |
+| 部署 | 与托管商无关的静态构建 | 与托管商无关的静态构建，另含 raw 与 AI 产物 |
+
+## Docusaurus 的框架能力更广
+
+Docusaurus 插件可以加载内容、增加路由和数据、修改构建基础设施，并把内容模型与主题配对。主题 alias 和 swizzling 工作流允许团队 wrap 或 eject React 组件。当文档站也是高度定制的网站，或所需集成已存在于 Docusaurus 生态中时，这是显著优势。
+
+灵活性也有维护成本。Docusaurus 官方明确提醒，unsafe swizzled component 可能在 minor release 中发生破坏，并建议优先 wrap 而不是 eject。高度定制的站点本质上也是一套需要团队长期维护的应用。
+
+Clarify 插件同样提供内容、路由、HTML、SSG、virtual module 和 runtime slot hooks，但它的生态与稳定 UI 替换面还不如 Docusaurus 成熟。只有当 Clarify 内置的产品形态已经接近团队目标时，它才更省事。
+
+## 版本化是 Docusaurus 的明确优势
+
+Docusaurus 能把当前文档冻结到版本目录，为不同版本维护 sidebar，选择 latest version，显示 unreleased 或 unmaintained banner，并按语言与版本过滤搜索。它的官方指南也给出了重要警告：复制版本会增加构建时间和贡献复杂度，只有读者确实需要并行手册时才值得使用。
+
+Clarify 当前有发布说明组件和可复用版本变量，但这不是文档版本化。它还不能生成并行版本路由和版本选择器。需要同时维护多个产品或 SDK 世代的团队，应把这个差距视为决定性因素。
+
+## Clarify 集成了开发者文档基础设施
+
+Docusaurus 不把 OpenAPI 作为核心内容模型，团队通常需要选择并配置插件、主题或独立 renderer。Clarify 在构建期解析 OpenAPI，创建完整 Reference，把 operation 嵌入 MDX，验证规范，并在同一个 renderer 中提供请求工作台。
+
+搜索也体现了产品差异。Docusaurus 一等支持 Algolia DocSearch，包括语言/版本上下文过滤与可选 Algolia Ask AI；Typesense、本地索引和自定义搜索来自社区包或替换 SearchBar。Clarify 直接内置 Pagefind，不需要外部 crawler 或账户就能完成多语言静态搜索，但没有托管搜索分析和内置对话助手。
+
+Clarify 还会发布原始 Markdown、OpenAPI JSON/YAML、`llms.txt` 和 MCP 搜索索引。Docusaurus 可以通过插件生成类似产物，但那是组装工作，而不是默认发布契约。
+
+## 国际化与部署
+
+两者都会生成静态 HTML，可部署到 GitHub Pages、Netlify、Vercel、Cloudflare、对象存储或普通 Web 服务器，都不要求专有生产托管。
+
+Docusaurus 的 i18n 能力成熟，覆盖翻译 MDX、UI message catalog、插件 locale 文件、RTL、hreflang 和独立 locale 构建。Clarify 使用 locale 目录与本地化配置，保持 URL locale 前缀一致，并提供明确的缺失翻译策略。Docusaurus 为插件作者和大型站点提供更多控制；Clarify 用更少环节封装常见文档工作流。
+
+## 应该选择谁？
+
+当你需要原生文档版本化、成熟 React 插件/主题生态、多种内容类型，或把站点当应用深度控制时，选择 Docusaurus。它适合愿意承担框架配置和升级的团队。
+
+当 OpenAPI Reference、endpoint 嵌入、交互请求、静态本地搜索、原始内容与 MCP 输出应该作为一个产品直接工作，而不是自行选择插件栈时，选择 Clarify。如果并行文档版本是硬性要求，现在不要选择 Clarify。
+
+## 来源与范围
+
+- [Docusaurus 概览](https://docusaurus.io/docs)
+- [React 与 MDX](https://docusaurus.io/docs/markdown-features/react)
+- [国际化](https://docusaurus.io/docs/i18n/introduction)
+- [版本化](https://docusaurus.io/docs/versioning)
+- [搜索](https://docusaurus.io/docs/search)
+- [插件](https://docusaurus.io/docs/advanced/plugins)
+- [Swizzling](https://docusaurus.io/docs/swizzling)
+- [部署](https://docusaurus.io/docs/deployment)
+- [Clarify OpenAPI 支持](/features/openapi)
+- [Clarify 插件](/features/plugins)
+- [Clarify 路线图](/roadmap)

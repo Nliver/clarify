@@ -258,6 +258,22 @@
     --clarify-http-method-default-text: var(--color-zinc-100);
   }
 
+  .clarify-content-blog .clarify-mdx-page {
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .clarify-content-blog .clarify-page-metadata {
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .clarify-content-blog .clarify-page-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(2.5rem, 7cqw, 4.5rem);
+    line-height: 1.05;
+  }
+
   .clarify-api-response {
     --shiki-color-text: var(--clarify-ui-text-strong);
     --shiki-token-constant: #047857;

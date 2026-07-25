@@ -1,3 +1,9 @@
+---
+title: '配置站点'
+description: '这篇文档合并说明 Clarify 中和“站点体验”有关的配置：顶部导航、Tabs、侧边栏、主题、多语言、部署子路径和信息架构。'
+keywords: ['clarify', 'documentation', 'guides', 'navigation']
+---
+
 # 配置站点
 
 这篇文档合并说明 Clarify 中和“站点体验”有关的配置：顶部导航、Tabs、侧边栏、主题、多语言、部署子路径和信息架构。
@@ -15,10 +21,15 @@ import { defineConfig } from '@clarify-labs/cli'
 
 export default defineConfig({
   navigation: {
-    links: [
-      { label: '开始使用', href: '/getting-started' },
-      { label: 'API 文档', href: '/features/openapi' },
-      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify', external: true },
+    menus: [
+      { label: '开始使用', page: 'getting-started' },
+      {
+        label: '资源',
+        items: [
+          { label: 'API 文档', page: 'features/openapi' },
+          { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify' },
+        ],
+      },
     ],
   },
 })
@@ -27,8 +38,11 @@ export default defineConfig({
 | 字段 | 说明 |
 |------|------|
 | `label` | 导航项显示文字；支持多语言对象 |
-| `href` | 链接地址，站内链接建议使用绝对路径 |
-| `external` | 是否按外部链接处理 |
+| `href` | URL；外部地址会自动识别 |
+| `page` | 引用 `source` 下的 MDX 页面，不写 `.mdx` 后缀 |
+| `items` | 嵌套菜单项；每一项可继续使用 `href`、`page` 或 `items` |
+| `description` | 展开菜单中可选的辅助说明 |
+| `icon` | 可选的 Lucide 图标名 |
 
 ---
 

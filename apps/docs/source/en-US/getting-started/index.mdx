@@ -1,3 +1,9 @@
+---
+title: 'Getting Started'
+description: 'This page explains how Clarify works through the shortest possible path: install the CLI, create content, start the local site, and build static artifacts.'
+keywords: ['clarify', 'documentation', 'getting-started']
+---
+
 # Getting Started
 
 This page explains how Clarify works through the shortest possible path: install the CLI, create content, start the local site, and build static artifacts.
@@ -56,9 +62,9 @@ Clarify = MDX content + `clarify.ts` configuration + OpenAPI specs + static site
         "title": "My Docs",
         "description": "A documentation site built with Clarify",
         "navigation": {
-          "links": [
-            { "label": "Docs", "href": "/getting-started" },
-            { "label": "GitHub", "href": "https://github.com/example/project", "external": true }
+          "menus": [
+            { "label": "Docs", "page": "getting-started" },
+            { "label": "GitHub", "href": "https://github.com/example/project" }
           ]
         }
       }
@@ -71,9 +77,9 @@ Clarify = MDX content + `clarify.ts` configuration + OpenAPI specs + static site
         title: 'My Docs',
         description: 'A documentation site built with Clarify',
         navigation: {
-          links: [
-            { label: 'Docs', href: '/getting-started' },
-            { label: 'GitHub', href: 'https://github.com/example/project', external: true },
+          menus: [
+            { label: 'Docs', page: 'getting-started' },
+            { label: 'GitHub', href: 'https://github.com/example/project' },
           ],
         },
       })

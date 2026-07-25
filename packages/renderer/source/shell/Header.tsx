@@ -10,7 +10,7 @@ import { useConfig } from '../core/context'
 import { useBuiltInText } from '../i18n'
 import { storeLocalePreference } from '../theme/cookies'
 import { ThemeToggle } from '../theme/ThemeToggle'
-import type { Config, LocaleConfig, NavbarLink, NavigationNode, NavigationTab, RouteItem } from '../types'
+import type { Config, LocaleConfig, NavbarMenuItem, NavigationNode, NavigationTab, RouteItem } from '../types'
 import { isExternalHref, localizeHref, resolveHomeHref } from '../utils/href'
 import { resolveLocalizedText } from '../utils/localized-text'
 import { isSameRoutePath, normalizeRoutePath } from '../utils/path'
@@ -151,12 +151,90 @@ function NavbarTabs(arg0: NavbarTabsProps) {  const { tabs, currentLocale } = ar
   )
 }
 
-type MobileNavbarMenuProps = { links?: NavbarLink[]; config: Config; currentLocale?: string }
+type NavbarMenuItemProps = { item: NavbarMenuItem; config: Config; currentLocale?: string; nested?: boolean }
+
+function navbarMenuHref(item: NavbarMenuItem, config: Config, currentLocale?: string): string | undefined {
+  if ('page' in item) return localizeHref(item.page, config, currentLocale)
+  if ('href' in item) return localizeHref(item.href, config, currentLocale)
+  return undefined
+}
+
+function NavbarMenuItemLink(arg0: NavbarMenuItemProps) {
+  const { item, config, currentLocale, nested = false } = arg0
+  const href = navbarMenuHref(item, config, currentLocale)
+  if (!href) return null
+
+  const label = resolveLocalizedText(item.label, currentLocale, config.locales?.default)
+  const description = item.description
+    ? resolveLocalizedText(item.description, currentLocale, config.locales?.default)
+    : undefined
+  const className = clsx(
+    'clarify-ui-menu-item block rounded-(--clarify-theme-tokens-radius-lg) px-3 py-2 no-underline transition',
+    nested ? 'text-sm' : 'min-w-40',
+  )
+
+  if (isExternalHref(href)) {
+    return <a href={href} target="_blank" rel="noreferrer" className={className}><span className="flex items-center gap-2"><NavigationIcon name={item.icon} className="h-4 w-4" />{label}</span>{description ? <span className="block pl-6 text-xs opacity-70">{description}</span> : null}</a>
+  }
+
+  return <Link to={href} className={className}><span className="flex items-center gap-2"><NavigationIcon name={item.icon} className="h-4 w-4" />{label}</span>{description ? <span className="block pl-6 text-xs opacity-70">{description}</span> : null}</Link>
+}
+
+function NavbarMenuItems({ items, config, currentLocale }: { items: NavbarMenuItem[]; config: Config; currentLocale?: string }) {
+  return items.map((item, index) => {
+    if ('items' in item) {
+      return (
+        <div key={`${resolveLocalizedText(item.label, currentLocale, config.locales?.default)}-${index}`} className="pl-2">
+          <div className="flex items-center gap-2 px-3 py-2 text-xs font-semibold opacity-60"><NavigationIcon name={item.icon} className="h-3.5 w-3.5" />{resolveLocalizedText(item.label, currentLocale, config.locales?.default)}</div>
+          <div>{NavbarMenuItems({ items: item.items, config, currentLocale })}</div>
+        </div>
+      )
+    }
+    return <MenuItem key={'page' in item ? item.page : item.href}>{({ focus }) => <div className={focus ? 'clarify-ui-menu-item-focus rounded-(--clarify-theme-tokens-radius-lg)' : ''}><NavbarMenuItemLink item={item} config={config} currentLocale={currentLocale} /></div>}</MenuItem>
+  })
+}
+
+function NavbarMenus({ menus, config, currentLocale }: { menus?: NavbarMenuItem[]; config: Config; currentLocale?: string }) {
+  const pathname = normalizeRoutePath(useLocation().pathname)
+  if (!menus?.length) return null
+
+  return (
+    <nav className="clarify-top-nav hidden md:block" aria-label="Navigation">
+      <ul role="list" className="flex items-center gap-0.5">
+        {menus.map((menu, index) => {
+          const label = resolveLocalizedText(menu.label, currentLocale, config.locales?.default)
+          if (!('items' in menu)) {
+            const href = navbarMenuHref(menu, config, currentLocale)
+            if (!href) return null
+            const active = !isExternalHref(href) && isSameRoutePath(href, pathname, currentLocale)
+            return <TopLevelNavItem key={`${label}-${index}`} href={href} active={active}>{label}</TopLevelNavItem>
+          }
+
+          return (
+            <li key={`${label}-${index}`}>
+              <Menu as="div" className="relative">
+                <MenuButton className="clarify-ui-top-link inline-flex h-9 items-center rounded-(--clarify-theme-tokens-radius-md) px-3 no-underline transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--clarify-theme-tokens-colors-primary)">
+                  <span className="flex items-center gap-2"><NavigationIcon name={menu.icon} className="h-4 w-4" />{label}</span>
+                  <ChevronRight className="ml-1 h-3.5 w-3.5 rotate-90" />
+                </MenuButton>
+                <MenuItems anchor="bottom start" transition className="clarify-ui-menu z-50 mt-2 min-w-48 rounded-(--clarify-theme-tokens-radius-xl) border border-(--clarify-theme-tokens-colors-border) bg-(--clarify-theme-tokens-colors-surface) p-1 shadow-lg transition [--anchor-gap:--spacing(2)] focus:outline-none data-closed:scale-95 data-closed:opacity-0 dark:border-white/10 dark:bg-zinc-900">
+                  <NavbarMenuItems items={menu.items} config={config} currentLocale={currentLocale} />
+                </MenuItems>
+              </Menu>
+            </li>
+          )
+        })}
+      </ul>
+    </nav>
+  )
+}
+
+type MobileNavbarMenuProps = { menus?: NavbarMenuItem[]; config: Config; currentLocale?: string }
 
 function MobileNavbarMenu(arg0: MobileNavbarMenuProps) {
-  const { links, config, currentLocale } = arg0
+  const { menus, config, currentLocale } = arg0
   const t = useBuiltInText()
-  if (!links?.length) return null
+  if (!menus?.length) return null
 
   return (
     <Menu as="div" className="clarify-mobile-navbar-menu relative md:hidden">
@@ -172,32 +250,7 @@ function MobileNavbarMenu(arg0: MobileNavbarMenuProps) {
         anchor="bottom end"
         className="clarify-mobile-navbar-menu-list clarify-ui-menu z-50 mt-2 w-(--clarify-ui-menu-width) rounded-(--clarify-theme-tokens-radius-xl) border border-(--clarify-theme-tokens-colors-border) bg-(--clarify-theme-tokens-colors-surface) p-1 shadow-lg transition [--anchor-gap:--spacing(2)] focus:outline-none data-closed:scale-95 data-closed:opacity-0 dark:border-white/10 dark:bg-zinc-900"
       >
-        {links.map((link) => {
-          const label = resolveLocalizedText(link.label, currentLocale, config.locales?.default)
-          const href = localizeHref(link.href, config, currentLocale)
-          const external = isExternalHref(href)
-
-          return (
-            <MenuItem key={link.href}>
-              {({ focus }) => {
-                const className = clsx(
-                  'clarify-mobile-navbar-menu-item clarify-ui-menu-item block rounded-(--clarify-theme-tokens-radius-lg) px-3 py-2 no-underline transition',
-                  focus && 'clarify-ui-menu-item-focus',
-                )
-
-                return external ? (
-                  <a href={href} target="_blank" rel="noreferrer" className={className}>
-                    {label}
-                  </a>
-                ) : (
-                  <Link to={href} className={className}>
-                    {label}
-                  </Link>
-                )
-              }}
-            </MenuItem>
-          )
-        })}
+        <NavbarMenuItems items={menus} config={config} currentLocale={currentLocale} />
       </MenuItems>
     </Menu>
   )
@@ -353,7 +406,7 @@ export const Header = forwardRef<
   const { scrollY } = useScroll()
   const bgOpacityLight = useTransform(scrollY, [0, 72], ['70%', '95%'])
   const bgOpacityDark = useTransform(scrollY, [0, 72], ['60%', '92%'])
-  const hasNavbarLinks = Boolean(config.navigation?.links?.length)
+  const hasNavbarMenus = Boolean(config.navigation?.menus?.length)
   const tabsInNavbar = config.layout?.tabs === 'navbar'
 
   function renderBrand() {
@@ -375,24 +428,7 @@ export const Header = forwardRef<
   }
 
   function renderTopLinks() {
-    if (!hasNavbarLinks) return null
-
-    return (
-      <nav className="clarify-top-nav hidden md:block" aria-label={t('navbar.sections')}>
-        <ul role="list" className="flex items-center gap-0.5">
-          {config.navigation?.links?.map((link) => {
-            const href = localizeHref(link.href, config, currentLocale)
-            const active = !isExternalHref(href) && isSameRoutePath(href, pathname, currentLocale)
-
-            return (
-              <TopLevelNavItem key={link.href} href={href} active={active}>
-                {resolveLocalizedText(link.label, currentLocale, config.locales?.default)}
-              </TopLevelNavItem>
-            )
-          })}
-        </ul>
-      </nav>
-    )
+    return <NavbarMenus menus={config.navigation?.menus} config={config} currentLocale={currentLocale} />
   }
 
   function renderHeaderActions() {
@@ -401,11 +437,11 @@ export const Header = forwardRef<
         {tabsInNavbar ? <Search compact routes={routes} navigation={navigation} /> : null}
         {tabsInNavbar ? <NavbarTabs tabs={tabs} currentLocale={currentLocale} /> : null}
         {renderTopLinks()}
-        {hasNavbarLinks ? <div className="mx-2 hidden h-5 w-px bg-(--clarify-theme-tokens-colors-border) md:block md:dark:bg-white/15" /> : null}
+        {hasNavbarMenus ? <div className="mx-2 hidden h-5 w-px bg-(--clarify-theme-tokens-colors-border) md:block md:dark:bg-white/15" /> : null}
         <MobileSearch routes={routes} navigation={navigation} />
         <LanguageSwitcher config={config} currentLocale={currentLocale} currentRoute={currentRoute} />
         <ThemeToggle />
-        <MobileNavbarMenu links={config.navigation?.links} config={config} currentLocale={currentLocale} />
+        <MobileNavbarMenu menus={config.navigation?.menus} config={config} currentLocale={currentLocale} />
       </div>
     )
   }
@@ -426,7 +462,7 @@ export const Header = forwardRef<
           {renderBrand()}
         </div>
         {!tabsInNavbar ? (
-          <div className="clarify-header-center absolute left-1/2 hidden -translate-x-1/2 lg:block">
+          <div className="clarify-header-center hidden min-w-0 flex-1 justify-center lg:flex">
             <Search routes={routes} navigation={navigation} />
           </div>
         ) : null}

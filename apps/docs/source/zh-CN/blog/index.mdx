@@ -1,0 +1,43 @@
+---
+title: Clarify 博客
+description: "这里记录 Clarify 在真实文档项目中的设计取舍：如何让内容留在 Git 中，如何同时服务读者、搜索和 AI，以及如何把每次产品发布沉淀为可维护的文档。"
+keywords: ['clarify', 'documentation', 'blog']
+---
+
+# Clarify 博客
+
+这里记录 Clarify 在真实文档项目中的设计取舍：如何让内容留在 Git 中，如何同时服务读者、搜索和 AI，以及如何把每次产品发布沉淀为可维护的文档。
+
+## 最新文章
+
+<CardGroup cols={2}>
+  <Card title="Clarify 与 Mintlify" href="/blog/clarify-vs-mintlify">
+    比较源码可控的静态发布与包含编辑器、部署、API Playground 和 AI 助手的托管平台。
+  </Card>
+  <Card title="Clarify 与 Docusaurus" href="/blog/clarify-vs-docusaurus">
+    在集成式开发者文档工具与拥有原生版本化能力的成熟 React 框架之间做选择。
+  </Card>
+  <Card title="Clarify 与 VitePress" href="/blog/clarify-vs-vitepress">
+    比较内置 OpenAPI 工作流与 VitePress 的 Markdown 写作、Vue 组合及主题自由。
+  </Card>
+  <Card title="Clarify 与 Fern" href="/blog/clarify-vs-fern">
+    比较静态自托管与覆盖 SDK、托管 AI、版本和编辑器的 API-first 平台。
+  </Card>
+  <Card title="把发布说明写成产品文档" href="/blog/release-as-documentation">
+    从零散的提交记录走向可扫描、可链接、可长期维护的版本发布页面。
+  </Card>
+  <Card title="版本列表" href="/changelog">
+    查看 Clarify 已发布版本及每个版本的重要新增和改进。
+  </Card>
+</CardGroup>
+
+## 我们如何做产品对比
+
+这些文章会把经过验证的产品能力与设计取舍分开，以官方文档为主要来源，如实承认竞品更强的能力，并明确 Clarify 当前的差距，而不是制作一张功能对等清单。
+
+## 我们关注什么
+
+- **内容所有权**：Markdown、MDX 和 OpenAPI 规范保存在项目仓库中，可以审查、回滚和迁移。
+- **发布可靠性**：预览、检查、静态构建和搜索索引属于同一条发布链路。
+- **多种读者**：同一份内容既要适合人在页面中阅读，也要能被搜索和 AI 准确检索。
+- **渐进表达**：普通说明保持 Markdown；需要交互或结构化表达时再使用 MDX 组件。

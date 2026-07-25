@@ -1,0 +1,93 @@
+---
+title: 'Clarify 与 Mintlify：内容所有权还是托管式文档平台？'
+description: "Mintlify 和 Clarify 都能把 MDX 与 OpenAPI 变成完整的开发者文档，但两者优化的是不同的运行模式。Mintlify 是托管式文档平台，提供编辑器、自动部署、分析、AI 助手和成熟的 API Playground；Clarify 是开源发布工具，把仓库构建成可以部署到任意位置的静态产物。"
+keywords: ['clarify', 'documentation', 'blog', 'clarify-vs-mintlify']
+---
+
+# Clarify 与 Mintlify：内容所有权还是托管式文档平台？
+
+Mintlify 和 Clarify 都能把 MDX 与 OpenAPI 变成完整的开发者文档，但两者优化的是不同的运行模式。Mintlify 是托管式文档平台，提供编辑器、自动部署、分析、AI 助手和成熟的 API Playground；Clarify 是开源发布工具，把仓库构建成可以部署到任意位置的静态产物。
+
+因此，真正有用的问题不是谁的功能列表更长，而是团队希望文档运营由平台提供，还是把它放进一条由自己掌控源码的工程流程。
+
+## 一张表看清边界
+
+| 维度 | Mintlify | Clarify |
+|---|---|---|
+| 产品模式 | 连接 Git 仓库的托管平台 | 生成静态文件的开源 CLI 与 renderer |
+| 内容创作 | Markdown/MDX、内置组件、Web 编辑器、中心化 `docs.json` | Markdown/MDX、内置与页面内 React 组件、类型化 `clarify.ts` |
+| API 文档 | OpenAPI 与 AsyncAPI 生成、交互 Playground、代理、鉴权和代码示例 | OpenAPI 3.0/3.1 Reference、MDX 嵌入、浏览器请求工作台和请求代码 |
+| 搜索与 AI | 托管搜索与带引用的 AI 助手；助手按额度使用 | 静态 Pagefind 搜索、原始 Markdown/OpenAPI、`llms.txt` 和本地 MCP 搜索命令 |
+| 多语言与版本 | 站点项目中配置的平台能力 | 原生 locale 路由与回退；暂不支持原生多版本文档并行发布 |
+| 协作 | Web 编辑器、控制台、预览和平台分析 | Git Pull Request、本地预览和 VS Code 预览扩展 |
+| 部署 | 由 Mintlify 管理的 Git 联动部署 | 可部署到任意静态托管服务的纯静态产物 |
+
+这张表描述的是产品边界，不代表功能等价。例如，两者都能让 AI 读取文档，但托管式对话助手与静态 `llms.txt` 加 MCP 索引解决的是不同问题。
+
+## Mintlify 更强的地方
+
+### 完整的托管工作流
+
+Mintlify 覆盖了更多运营环节。GitHub App 会在 push 后部署变更，控制台和 Web 编辑器则承担了原本需要仓库、CI、预览环境与独立分析工具才能完成的工作。对于不使用本地工具链的写作者、支持团队和产品经理，这很有价值。
+
+Clarify 并不提供托管编辑器、审批界面、实时协作或文档分析。它适合已经把 Git 和 CI 作为协作系统的团队。简单地把这种模式叫作“更轻量”并不完整：它减少了平台依赖，也把工作流责任留给了团队。
+
+### API Playground 的深度
+
+Mintlify 能从 OpenAPI 或 AsyncAPI 生成 endpoint 页面，并提供 `interactive`、`simple` 和关闭 Playground 三种模式。官方文档还明确包含代理、凭据处理、生成示例、代码示例配置、预填值和 endpoint 级定制。
+
+Clarify 的请求工作台不只是静态 Schema 表格：读者可以选择服务器，填写参数和鉴权信息，直接发送浏览器请求，查看响应并复制请求代码。但请求从浏览器发出，仍受目标 API 的 CORS 与网络策略限制。Clarify 当前也没有 Mintlify 的托管代理和 AsyncAPI 支持。
+
+### 搜索、问答和洞察
+
+Mintlify Assistant 会索引已发布的文档与 API 规范，提供带引用的回答和代码示例，并展示使用洞察。这是一项托管能力，仅在付费方案中提供，并消耗共享 AI credits。
+
+Clarify 默认使用按 locale 隔离的静态 Pagefind 索引，同时输出原始 Markdown、OpenAPI、`llms.txt`，以及由 `clarify mcp` 通过本地 `search_docs` 工具暴露的 Orama 索引。这些产物可迁移且不依赖 AI 服务，但 Clarify 不提供托管聊天助手和分析控制台。
+
+## Clarify 更强的地方
+
+### 部署和源码所有权是明确契约
+
+`clarify build` 会写出预渲染 HTML、hydration assets、搜索索引、原始内容、OpenAPI 产物与 AI discovery 文件。结果只需要静态文件托管；生产环境不需要 Node.js runtime，发布也不要求 Clarify 账户。
+
+Mintlify 的内容同样保存在 Git 中，这一点不应被忽略。差异在于运行所有权：它的标准流程通过 Mintlify 平台发布，而 Clarify 的构建结果本身就是可部署产品。存在合规、离线交付或平台可迁移要求的团队，可以检查并自行托管完整的 Clarify 产物。
+
+### 把一个 OpenAPI operation 放进业务指南
+
+Clarify 把 API Reference 和叙述性文档视为同一份来源的两种视图。`OpenApiOperation` 可以把一个 operation 放进 MDX 教程，`OpenApiRequest` 则能把请求工作台放在对应业务流程旁边。endpoint 事实仍留在规范中，读者却不必总是跳到独立 Reference。
+
+Mintlify 同样支持自定义 endpoint MDX 页面，并提供范围更广的托管 Playground。Clarify 的差异并不是“只有它能嵌入”，而是这项能力属于开放的静态发布流程，并与普通指南共用同一个 renderer。
+
+### 本地搜索和 AI 产物不依赖服务账户
+
+Pagefind、原始 Markdown、`llms.txt` 和 MCP 搜索索引都在构建期生成。它们可以作为发布产物保存、从同一域名提供、被镜像或在 CI 中检查。当需求是机器可读的文档基础设施，而不是打包好的终端用户聊天机器人时，这种模式更直接。
+
+## Clarify 当前的重要差距
+
+<Callout type="warning" title="不要把本文理解成功能对等声明">
+  Clarify 当前不提供原生多版本文档、托管可视化编辑器、协作角色、分析、托管 AI 助手、AsyncAPI Reference 或服务端 API 代理。当这些能力需要由同一家供应商完整交付时，Mintlify 是更完整的产品。
+</Callout>
+
+Clarify 的主题 tokens 与插件生命周期提供了有意义的定制空间，但 Mintlify 的平台组件和可视化流程封装得更完整。反过来，需要替换 renderer 内部实现的团队也应仔细评估 Clarify 当前的主题边界；开源不等于每个 UI 表面都已经具备稳定扩展 API。
+
+## 应该选择谁？
+
+当文档团队需要一个托管工作空间时，选择 Mintlify：面向非工程角色的浏览器编辑、自动托管部署、分析、现成 AI 助手和成熟 API Playground，比掌控完整发布 runtime 更重要。
+
+当静态自托管、可检查构建产物、本地优先工具、内置多语言搜索、叙述指南中的 OpenAPI，以及直接输出 AI/MCP 产物是明确要求时，选择 Clarify。它尤其适合已经用 Git 和 CI 审查、发布内容的团队。
+
+迁移决策还应计算运营成本，而不仅是订阅成本。Mintlify 通过运营平台节省工程时间；Clarify 消除了一个平台依赖，却要求团队自行承担部署以及所需的协作与分析系统。
+
+## 来源与范围
+
+本文依据双方公开文档和 Clarify 当前仓库进行研究。产品能力和方案边界可能变化。
+
+- [Mintlify 文档概览](https://www.mintlify.com/docs)
+- [Mintlify 全局设置与 `docs.json`](https://www.mintlify.com/docs/settings/global)
+- [Mintlify API Playground](https://www.mintlify.com/docs/api-playground/overview)
+- [Mintlify 部署](https://www.mintlify.com/docs/deploy)
+- [Mintlify Assistant](https://www.mintlify.com/docs/ai/assistant)
+- [Clarify 功能](/features)
+- [Clarify OpenAPI 支持](/features/openapi)
+- [Clarify 部署](/guides/deployment)
+- [Clarify 路线图](/roadmap)

@@ -12,25 +12,123 @@ export default defineConfig({
     preset: 'default',
   },
   navigation: {
-    links: [
+    menus: [
       {
         label: {
-          'zh-CN': '文档',
-          'en-US': 'Docs',
+          'zh-CN': '资源',
+          'en-US': 'Resources',
         },
-        href: '/getting-started',
+        icon: 'Library',
+        description: {
+          'zh-CN': '了解项目动态、版本变化和后续计划',
+          'en-US': 'Follow project updates, releases, and what comes next',
+        },
+        items: [
+          {
+            label: {
+              'zh-CN': '博客',
+              'en-US': 'Blog',
+            },
+            icon: 'NotebookTabs',
+            page: 'blog',
+          },
+          {
+            label: {
+              'zh-CN': '版本列表',
+              'en-US': 'Releases',
+            },
+            icon: 'Tag',
+            page: 'changelog',
+          },
+          {
+            label: {
+              'zh-CN': '路线图',
+              'en-US': 'Roadmap',
+            },
+            icon: 'Milestone',
+            page: 'roadmap',
+          },
+        ],
       },
       {
         label: {
-          'zh-CN': 'API',
-          'en-US': 'API',
+          'zh-CN': '开发者',
+          'en-US': 'Developers',
         },
-        href: '/features/openapi',
+        icon: 'CodeXml',
+        description: {
+          'zh-CN': '构建 API、集成和自动化工作流',
+          'en-US': 'Build APIs, integrations, and automation workflows',
+        },
+        items: [
+          {
+            label: {
+              'zh-CN': 'API',
+              'en-US': 'API',
+            },
+            icon: 'Braces',
+            description: {
+              'zh-CN': '查看接口能力和嵌入方式',
+              'en-US': 'Explore API capabilities and embedding options',
+            },
+            items: [
+              {
+                label: {
+                  'zh-CN': 'OpenAPI',
+                  'en-US': 'OpenAPI',
+                },
+                icon: 'FileJson2',
+                page: 'features/openapi',
+              },
+              {
+                label: {
+                  'zh-CN': '嵌入 OpenAPI',
+                  'en-US': 'Embed OpenAPI',
+                },
+                icon: 'CodeXml',
+                page: 'openapi/embedding',
+              },
+            ],
+          },
+          {
+            label: {
+              'zh-CN': '集成能力',
+              'en-US': 'Integrations',
+            },
+            icon: 'Workflow',
+            items: [
+              {
+                label: {
+                  'zh-CN': 'MCP',
+                  'en-US': 'MCP',
+                },
+                icon: 'Bot',
+                page: 'features/mcp',
+              },
+              {
+                label: {
+                  'zh-CN': '插件',
+                  'en-US': 'Plugins',
+                },
+                icon: 'Puzzle',
+                page: 'features/plugins',
+              },
+              {
+                label: {
+                  'zh-CN': 'VS Code 扩展',
+                  'en-US': 'VS Code Extension',
+                },
+                icon: 'PanelsTopLeft',
+                page: 'features/vscode-extension',
+              },
+            ],
+          },
+        ],
       },
       {
         label: 'GitHub',
         href: 'https://github.com/taicode-labs/clarify',
-        external: true,
+        icon: 'ExternalLink',
       },
     ],
     tabs: [
@@ -50,26 +148,14 @@ export default defineConfig({
             pages: [
               {
                 page: 'what-is-clarify',
-                title: {
-                  'zh-CN': '什么是 Clarify',
-                  'en-US': 'What is Clarify',
-                },
                 icon: 'Sparkles',
               },
               {
                 page: 'getting-started',
-                title: {
-                  'zh-CN': '快速开始',
-                  'en-US': 'Quickstart',
-                },
                 icon: 'Rocket',
               },
               {
                 page: 'features',
-                title: {
-                  'zh-CN': '能力概览',
-                  'en-US': 'Feature Overview',
-                },
                 icon: 'LayoutGrid',
               },
             ],
@@ -90,26 +176,14 @@ export default defineConfig({
                 pages: [
                   {
                     page: 'guides/writing-content',
-                    title: {
-                      'zh-CN': 'MDX 与内容',
-                      'en-US': 'MDX Guide',
-                    },
                     icon: 'PenLine',
                   },
                   {
                     page: 'guides/custom-mdx-components',
-                    title: {
-                      'zh-CN': '自定义 MDX 组件',
-                      'en-US': 'Custom MDX Components',
-                    },
                     icon: 'Blocks',
                   },
                   {
                     page: 'guides/navigation',
-                    title: {
-                      'zh-CN': '导航与配置',
-                      'en-US': 'Navigation & Config',
-                    },
                     icon: 'SlidersHorizontal',
                   },
                 ],
@@ -123,36 +197,28 @@ export default defineConfig({
                 pages: [
                   {
                     page: 'reference/built-in-components',
-                    title: {
-                      'zh-CN': '组件总览',
-                      'en-US': 'Overview',
-                    },
                     icon: 'LayoutGrid',
                   },
-                  { page: 'reference/components/steps', title: 'Steps / Step', icon: 'ListOrdered' },
-                  { page: 'reference/components/tabs', title: 'Tabs / Tab', icon: 'PanelTop' },
-                  { page: 'reference/components/callout', title: 'Callout', icon: 'MessageSquareWarning' },
-                  { page: 'reference/components/note', title: 'Note', icon: 'StickyNote' },
-                  { page: 'reference/components/card', title: 'CardGroup / Card', icon: 'PanelsTopLeft' },
-                  { page: 'reference/components/collapse', title: 'Collapse', icon: 'ListCollapse' },
-                  { page: 'reference/components/accordion-group', title: 'AccordionGroup', icon: 'ListCollapse' },
-                  { page: 'reference/components/file-tree', title: 'FileTree', icon: 'FolderTree' },
-                  { page: 'reference/components/tooltip', title: 'Tooltip', icon: 'MessageCircleQuestion' },
-                  { page: 'reference/components/button', title: 'Button', icon: 'MousePointerClick' },
-                  { page: 'reference/components/web-frame', title: 'WebFrame', icon: 'Monitor' },
-                  { page: 'reference/components/code-group', title: 'CodeGroup', icon: 'Braces' },
-                  { page: 'reference/components/mermaid', title: 'Mermaid', icon: 'Workflow' },
-                  { page: 'reference/components/row-col', title: 'Row / Col', icon: 'Columns2' },
-                  { page: 'reference/components/properties', title: 'Properties / Property', icon: 'ListTree' },
-                  { page: 'reference/components/openapi', title: 'OpenAPI', icon: 'FileJson2' },
+                  { page: 'reference/components/steps', icon: 'ListOrdered' },
+                  { page: 'reference/components/tabs', icon: 'PanelTop' },
+                  { page: 'reference/components/callout', icon: 'MessageSquareWarning' },
+                  { page: 'reference/components/note', icon: 'StickyNote' },
+                  { page: 'reference/components/card', icon: 'PanelsTopLeft' },
+                  { page: 'reference/components/collapse', icon: 'ListCollapse' },
+                  { page: 'reference/components/accordion-group', icon: 'ListCollapse' },
+                  { page: 'reference/components/file-tree', icon: 'FolderTree' },
+                  { page: 'reference/components/tooltip', icon: 'MessageCircleQuestion' },
+                  { page: 'reference/components/button', icon: 'MousePointerClick' },
+                  { page: 'reference/components/web-frame', icon: 'Monitor' },
+                  { page: 'reference/components/code-group', icon: 'Braces' },
+                  { page: 'reference/components/mermaid', icon: 'Workflow' },
+                  { page: 'reference/components/row-col', icon: 'Columns2' },
+                  { page: 'reference/components/properties', icon: 'ListTree' },
+                  { page: 'reference/components/openapi', icon: 'FileJson2' },
                 ],
               },
               {
                 page: 'openapi/embedding',
-                title: {
-                  'zh-CN': '在 MDX 中嵌入 OpenAPI',
-                  'en-US': 'Embed OpenAPI in MDX',
-                },
                 icon: 'CodeXml',
               },
             ],
@@ -166,42 +232,22 @@ export default defineConfig({
             pages: [
               {
                 page: 'features/openapi',
-                title: {
-                  'zh-CN': 'OpenAPI 文档',
-                  'en-US': 'OpenAPI Documentation',
-                },
                 icon: 'FileJson2',
               },
               {
                 page: 'features/variables',
-                title: {
-                  'zh-CN': '项目变量',
-                  'en-US': 'Project Variables',
-                },
                 icon: 'Braces',
               },
               {
                 page: 'features/mcp',
-                title: {
-                  'zh-CN': 'MCP 文档搜索',
-                  'en-US': 'MCP Documentation Search',
-                },
                 icon: 'Bot',
               },
               {
                 page: 'features/vscode-extension',
-                title: {
-                  'zh-CN': 'VS Code 扩展',
-                  'en-US': 'VS Code Extension',
-                },
                 icon: 'Package',
               },
               {
                 page: 'features/plugins',
-                title: {
-                  'zh-CN': '插件系统',
-                  'en-US': 'Plugin System',
-                },
                 icon: 'Puzzle',
               },
             ],
@@ -215,34 +261,18 @@ export default defineConfig({
             pages: [
               {
                 page: 'reference',
-                title: {
-                  'zh-CN': '参考总览',
-                  'en-US': 'Reference Overview',
-                },
                 icon: 'BookMarked',
               },
               {
                 page: 'reference/cli-commands',
-                title: {
-                  'zh-CN': 'CLI 命令参考',
-                  'en-US': 'CLI Reference',
-                },
                 icon: 'Terminal',
               },
               {
                 page: 'reference/clarify-config',
-                title: {
-                  'zh-CN': '配置参考',
-                  'en-US': 'Configuration Reference',
-                },
                 icon: 'Settings2',
               },
               {
                 page: 'reference/plugin-api',
-                title: {
-                  'zh-CN': '插件 API 参考',
-                  'en-US': 'Plugin API Reference',
-                },
                 icon: 'Puzzle',
               },
             ],
@@ -256,40 +286,21 @@ export default defineConfig({
             pages: [
               {
                 page: 'guides/deployment',
-                title: {
-                  'zh-CN': '部署上线',
-                  'en-US': 'Deployment',
-                },
                 icon: 'Rocket',
               },
               {
                 page: 'guides/migrate-from-mintlify',
-                title: {
-                  'zh-CN': '从 Mintlify 迁移',
-                  'en-US': 'Migrate from Mintlify',
-                },
                 icon: 'RefreshCcw',
               },
               {
-                page: 'changelog',
-                title: {
-                  'zh-CN': '更新日志',
-                  'en-US': 'Changelog',
-                },
-                icon: 'History',
-              },
-              {
                 page: 'roadmap',
-                title: {
-                  'zh-CN': '产品路线图',
-                  'en-US': 'Roadmap',
-                },
                 icon: 'Milestone',
               },
             ],
           },
         ],
       },
+
       {
         tab: {
           'zh-CN': 'OpenAPI',
@@ -306,27 +317,15 @@ export default defineConfig({
             pages: [
               {
                 openapi: 'api.openapi.json',
-                title: {
-                  'zh-CN': 'OpenAPI 完整示例',
-                  'en-US': 'OpenAPI Example',
-                },
                 icon: 'FileJson2',
               },
               {
                 openapi: 'response-body-types.openapi.json',
-                title: {
-                  'zh-CN': '返回体类型测试',
-                  'en-US': 'Response Body Types',
-                },
                 icon: 'ScanSearch',
               },
               {
                 openapi: 'api.openapi.json',
                 path: 'openapi/pages',
-                title: {
-                  'zh-CN': '示例：Pages API',
-                  'en-US': 'Example: Pages API',
-                },
                 icon: 'BookOpenCheck',
                 filter: {
                   tags: ['Pages'],
@@ -335,10 +334,6 @@ export default defineConfig({
               {
                 openapi: 'api.openapi.json',
                 path: 'openapi/assets',
-                title: {
-                  'zh-CN': '示例：Assets API',
-                  'en-US': 'Example: Assets API',
-                },
                 icon: 'ImageUp',
                 filter: {
                   tags: ['Assets'],
@@ -346,10 +341,6 @@ export default defineConfig({
               },
               {
                 page: 'openapi/embedding',
-                title: {
-                  'zh-CN': '局部嵌入使用说明',
-                  'en-US': 'Embedding OpenAPI in MDX',
-                },
                 icon: 'CodeXml',
               },
             ],
@@ -372,75 +363,82 @@ export default defineConfig({
             pages: [
               {
                 page: 'development',
-                title: {
-                  'zh-CN': '开发者入口',
-                  'en-US': 'Developer Guide',
-                },
                 icon: 'SquareTerminal',
               },
               {
                 page: 'development/architecture',
-                title: {
-                  'zh-CN': '整体架构',
-                  'en-US': 'Architecture',
-                },
                 icon: 'Network',
               },
               {
                 page: 'development/cli',
-                title: {
-                  'zh-CN': 'CLI 与引擎',
-                  'en-US': 'CLI and Engine',
-                },
                 icon: 'Terminal',
               },
               {
                 page: 'development/vscode-extension',
-                title: {
-                  'zh-CN': 'VS Code 扩展',
-                  'en-US': 'VS Code Extension',
-                },
                 icon: 'Package',
               },
               {
                 page: 'development/renderer',
-                title: {
-                  'zh-CN': '渲染器架构',
-                  'en-US': 'Renderer Architecture',
-                },
                 icon: 'MonitorCog',
               },
               {
                 page: 'development/error-states',
-                title: {
-                  'zh-CN': '错误状态',
-                  'en-US': 'Error States',
-                },
                 icon: 'Bug',
               },
               {
                 page: 'development/ssg',
-                title: {
-                  'zh-CN': '静态生成流程',
-                  'en-US': 'SSG Pipeline',
-                },
                 icon: 'Blocks',
               },
               {
                 page: 'development/plugin-api',
-                title: {
-                  'zh-CN': '插件扩展接口',
-                  'en-US': 'Plugin API',
-                },
                 icon: 'PanelsTopLeft',
               },
               {
                 page: 'development/contributing',
-                title: {
-                  'zh-CN': '参与贡献',
-                  'en-US': 'Contributing',
-                },
                 icon: 'GitPullRequestArrow',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        tab: {
+          'zh-CN': '博客',
+          'en-US': 'Blog',
+        },
+        icon: 'Newspaper',
+        pages: [
+          {
+            group: {
+              'zh-CN': '博客',
+              'en-US': 'Blog',
+            },
+            icon: 'Newspaper',
+            layout: 'blog',
+            pages: [
+              {
+                page: 'blog',
+                icon: 'Newspaper',
+              },
+              {
+                page: 'blog/release-as-documentation',
+                icon: 'PenLine',
+              },
+              {
+                page: 'blog/clarify-vs-mintlify',
+                icon: 'Scale',
+              },
+              {
+                page: 'blog/clarify-vs-docusaurus',
+                icon: 'Scale',
+              },
+              {
+                page: 'blog/clarify-vs-vitepress',
+                icon: 'Scale',
+              },
+              {
+                page: 'blog/clarify-vs-fern',
+                icon: 'Scale',
               },
             ],
           },

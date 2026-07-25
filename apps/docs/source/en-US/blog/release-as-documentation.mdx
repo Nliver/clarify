@@ -1,0 +1,71 @@
+---
+title: Treat release notes as product documentation
+description: "Release notes are not commit history with different formatting. They should answer three questions closer to the reader: what changed, how does it affect me, an…"
+keywords: ['clarify', 'documentation', 'blog', 'release-as-documentation']
+---
+
+# Treat release notes as product documentation
+
+Release notes are not commit history with different formatting. They should answer three questions closer to the reader: what changed, how does it affect me, and do I need to act?
+
+## Move from change lists to user outcomes
+
+Commit lists are usually organized around implementation, such as “refactor route parser” or “add metadata field.” A release page should translate those details into verifiable outcomes: pages can inherit a navigation group layout, authors can override it on one page, and release history can use structured components.
+
+Before writing an item, complete this sentence:
+
+> This change lets which reader accomplish what, or avoid which problem?
+
+If there is no clear answer, the detail probably belongs in internal commit history.
+
+## Use structured release components
+
+Clarify's built-in `Release` and `ReleaseItem` components keep versions, dates, and change categories in a stable structure while still allowing Markdown inside each item.
+
+```mdx
+<Release version="v0.12.0" date="2026-07-25">
+  <ReleaseItem title="Added">
+    A navigation group can declare `layout: 'blog'`, which its pages inherit automatically.
+  </ReleaseItem>
+  <ReleaseItem title="Improved">
+    A page can declare `layout: 'documentation'` to override the blog layout inherited from its group.
+  </ReleaseItem>
+</Release>
+```
+
+This is more reliable than simulating data with several H2 and H3 headings. Version names, release dates, and item boundaries have explicit meaning, while the theme owns their visual presentation.
+
+## Give every release the same editorial workflow
+
+<Steps>
+  <Step title="Collect reader-visible changes">
+    Extract observable changes from merged work, issues, and migration notes. Leave purely internal refactors out.
+  </Step>
+  <Step title="Merge items by outcome">
+    When several commits deliver one capability, write one complete item instead of exposing each implementation step.
+  </Step>
+  <Step title="Mark required actions">
+    For breaking changes, deprecations, or configuration migrations, state who is affected and what to do next, then link to a complete guide.
+  </Step>
+  <Step title="Build it with the release">
+    Run the documentation build before publishing so MDX, internal links, search indexes, and localized pages ship together.
+  </Step>
+</Steps>
+
+## Let blog and documentation layouts do different jobs
+
+A blog series suits opinions, design decisions, and evolving practice, so its navigation group can set `layout: 'blog'` once. Every page without an explicit layout then inherits it:
+
+```ts
+{
+  group: 'Blog',
+  layout: 'blog',
+  pages: ['blog', 'blog/release-as-documentation', 'changelog'],
+}
+```
+
+If one page is a dense reference, set `layout: documentation` in its frontmatter to override the group. `documentation` is also the default layout, making its purpose explicit.
+
+## Release history should lead to durable documentation
+
+The release list tells readers what happened; guides and reference pages explain how to use it. When an item needs long code samples, migration steps, or a complete configuration table, keep a concise summary in the release and link to a dedicated page. The release list stays scannable, and durable guidance does not disappear beneath an old version heading.

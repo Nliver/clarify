@@ -2,15 +2,15 @@ import clsx from 'clsx'
 import { Link } from 'react-router-dom'
 
 import { useConfig, useLocale } from '../core/context'
-import type { Config, NavbarLink } from '../core/types'
+import type { Config, LinkConfig } from '../core/types'
 import { isExternalHref, localizeHref } from '../utils/href'
 import { resolveLocalizedText } from '../utils/localized-text'
 
-type FooterLinkProps = { link: NavbarLink; locale?: string; config: Config }
+type FooterLinkProps = { link: LinkConfig; locale?: string; config: Config }
 
 function FooterLink(arg0: FooterLinkProps) {
   const { link, locale, config } = arg0
-  const external = link.external ?? isExternalHref(link.href)
+  const external = isExternalHref(link.href)
   const href = external ? link.href : localizeHref(link.href, config, locale)
   const className = "clarify-footer-link no-underline transition"
   const label = resolveLocalizedText(link.label, locale, config.locales?.default)

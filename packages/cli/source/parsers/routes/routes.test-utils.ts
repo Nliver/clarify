@@ -45,6 +45,8 @@ export function contentRoute(route: ContentRouteFixture = {}): ContentRoute {
       description: description ?? meta?.description,
       keywords: keywords ?? meta?.keywords,
       sections: sections ?? meta?.sections,
+      group: meta?.group,
+      layout: meta?.layout,
     },
     source: {
       filePath: filePath ?? source?.filePath ?? 'index.mdx',

@@ -1,3 +1,9 @@
+---
+title: 'Clarify configuration reference'
+description: 'We recommend using clarify.ts as the project configuration file. clarify.js and clarify.json are also supported, with the following loading priority:'
+keywords: ['clarify', 'documentation', 'reference', 'clarify-config']
+---
+
 # Clarify configuration reference
 
 We recommend using `clarify.ts` as the project configuration file. `clarify.js` and `clarify.json` are also supported, with the following loading priority:
@@ -65,9 +71,9 @@ export default defineConfig({
     },
   },
   navigation: {
-    links: [
-      { label: { 'zh-CN': '文档', 'en-US': 'Docs' }, href: '/getting-started' },
-      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify', external: true },
+    menus: [
+      { label: { 'zh-CN': '文档', 'en-US': 'Docs' }, page: 'getting-started' },
+      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify' },
     ],
     tabs: [
       {
@@ -144,7 +150,7 @@ export default defineConfig({
 | `homeUrl` | `string` | `"/"` | URL used when clicking the site branding/logo in the header. |
 | `favicon` | `string \| { light?: string; dark?: string }` | — | Browser tab icon. Supports a single path or light/dark variants. `.ico`, `.svg`, and complete `.png` icon sets work well. |
 | `theme` | `{ preset?: 'default' \| 'base'; tokens?: ClarifyThemeTokensConfig; layout?: ClarifyThemeLayoutConfig }` | `{ preset: 'default' }` | Theme configuration. Select a preset and override selected design tokens or layout values. |
-| `navigation` | `{ links?: ClarifyNavbarLink[]; tabs?: ClarifyTabsConfig }` | — | Top navigation links, site categories, and sidebar structure. |
+| `navigation` | `{ menus?: ClarifyNavbarMenu[]; tabs?: ClarifyTabsConfig }` | — | Top navigation menus, site categories, and sidebar structure. |
 | `banner` | `ClarifyBannerConfig` | — | Top announcement bar for releases, migrations, maintenance windows, or short notices. |
 | `footer` | `ClarifyFooterConfig` | — | Footer links, social/community links, copyright text, or a custom footer component path. Clarify branding remains required. |
 | `locales` | `ClarifyLocalesConfig` | — | Locale options, default locale, text direction, and missing-translation behavior. |
@@ -544,44 +550,55 @@ Clarify previews this page at `/404`, and reuses it as the 404 display for unkno
 
 ---
 
-## `navigation.links`
+## `navigation.menus`
 
 ```ts
-type ClarifyNavbarLink = {
+type ClarifyNavbarMenuItem = {
   label: ClarifyLocalizedText
-  href: string
-  external?: boolean
-}
+  description?: ClarifyLocalizedText
+  icon?: string
+} & (
+  | { href: string }
+  | { page: string }
+  | { items: ClarifyNavbarMenuItem[] }
+)
 ```
 
-`navigation.links` defines global entries in the top navigation. Each link includes:
+`navigation.menus` defines simple links and nested menus in their display order. Every item selects exactly one target mode:
 
 | Field | Required | Description |
 |-------|----------|-------------|
 | `label` | Yes | Display text. Supports localized text. |
-| `href` | Yes | Target URL. Use `/`-prefixed paths for internal links and full URLs for external links. |
-| `external` | No | Treat the link as external. When `true`, it usually opens in a new tab and carries external-link semantics. |
+| `href` | One of three | Target URL. Full HTTP(S) URLs are detected as external automatically. |
+| `page` | One of three | MDX page path under `source`, without the `.mdx` suffix. |
+| `items` | One of three | Nested menu items using the same structure. |
+| `description` | No | Supporting text displayed in expanded menus. |
+| `icon` | No | Lucide icon name. |
 
 <CodeGroup>
 
-```ts title="Internal links"
+```ts title="Simple entries"
 export default defineConfig({
   navigation: {
-    links: [
-      { label: 'Docs', href: '/getting-started' },
-      { label: 'API', href: '/features/openapi' },
+    menus: [
+      { label: 'Docs', page: 'getting-started' },
+      { label: 'GitHub', href: 'https://github.com/acme/docs' },
     ],
   },
 })
 ```
 
-```ts title="Localized links"
+```ts title="Nested menu"
 export default defineConfig({
   navigation: {
-    links: [
-      { label: { 'zh-CN': '指南', 'en-US': 'Guides' }, href: '/guides' },
-      { label: { 'zh-CN': '更新日志', 'en-US': 'Changelog' }, href: '/changelog' },
-      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify', external: true },
+    menus: [
+      {
+        label: { 'zh-CN': '资源', 'en-US': 'Resources' },
+        items: [
+          { label: { 'zh-CN': '指南', 'en-US': 'Guides' }, page: 'guides' },
+          { label: { 'zh-CN': '更新日志', 'en-US': 'Changelog' }, page: 'changelog' },
+        ],
+      },
     ],
   },
 })
@@ -590,9 +607,9 @@ export default defineConfig({
 ```json title="JSON config"
 {
   "navigation": {
-    "links": [
-      { "label": "Docs", "href": "/getting-started" },
-      { "label": "GitHub", "href": "https://github.com/acme/docs", "external": true }
+    "menus": [
+      { "label": "Docs", "page": "getting-started" },
+      { "label": "GitHub", "href": "https://github.com/acme/docs" }
     ]
   }
 }
@@ -600,7 +617,7 @@ export default defineConfig({
 
 </CodeGroup>
 
-Keep only core entries in the top navigation, and let the sidebar carry the complete information architecture. Avoid placing every documentation section in `navigation.links`, especially for narrow and mobile layouts.
+Keep only core entries in the top navigation, and let the sidebar carry the complete information architecture. Avoid placing every documentation section in `navigation.menus`, especially for narrow and mobile layouts.
 
 ---
 
@@ -610,7 +627,6 @@ Keep only core entries in the top navigation, and let the sidebar carry the comp
 type ClarifyBannerLink = {
   label: ClarifyLocalizedText
   href: string
-  external?: boolean
 }
 
 type ClarifyBannerConfigOptions = {
@@ -659,7 +675,6 @@ Recommendations:
 type ClarifyFooterLink = {
   label: ClarifyLocalizedText
   href: string
-  external?: boolean
 }
 
 type ClarifyFooterLinksConfig = {
@@ -677,7 +692,7 @@ Field reference for the built-in object form:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `links` | `ClarifyFooterLink[]` | Built-in footer link list. Uses the same shape as `navigation.links`. |
+| `links` | `ClarifyFooterLink[]` | Built-in footer link list. Each item has `label`, `href`, and optional `external`. |
 | `socials` | `Record<string, string>` | Built-in social or community links. Keys can be semantic names such as `github`, `x`, or `discord`. |
 | `copyright` | `ClarifyLocalizedText` | Built-in copyright or organization statement. Supports localized text. |
 
@@ -689,7 +704,7 @@ export default defineConfig({
     links: [
       { label: 'Quick start', href: '/getting-started' },
       { label: 'Configuration reference', href: '/reference/clarify-config' },
-      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify', external: true },
+      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify' },
     ],
     socials: {
       github: 'https://github.com/taicode-labs/clarify',
@@ -704,7 +719,7 @@ export default defineConfig({
   footer: {
     links: [
       { label: { 'zh-CN': '隐私政策', 'en-US': 'Privacy Policy' }, href: '/privacy' },
-      { label: { 'zh-CN': '服务状态', 'en-US': 'Status' }, href: 'https://status.example.com', external: true },
+      { label: { 'zh-CN': '服务状态', 'en-US': 'Status' }, href: 'https://status.example.com' },
     ],
     socials: {
       github: 'https://github.com/acme',

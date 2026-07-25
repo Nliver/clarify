@@ -1,0 +1,93 @@
+---
+title: 'Clarify and Mintlify: source ownership or a managed docs platform?'
+description: "Mintlify and Clarify can both turn MDX and OpenAPI into polished developer documentation, but they optimize for different operating models. Mintlify is a manage…"
+keywords: ['clarify', 'documentation', 'blog', 'clarify-vs-mintlify']
+---
+
+# Clarify and Mintlify: source ownership or a managed docs platform?
+
+Mintlify and Clarify can both turn MDX and OpenAPI into polished developer documentation, but they optimize for different operating models. Mintlify is a managed documentation platform with an editor, automatic deployment, analytics, an AI assistant, and a highly developed API playground. Clarify is an open-source publishing tool that builds the repository into static artifacts you can host anywhere.
+
+The useful question is therefore not which product has the longer feature list. It is whether your team wants documentation operations supplied as a service or assembled into a source-owned engineering workflow.
+
+## The comparison in one view
+
+| Area | Mintlify | Clarify |
+|---|---|---|
+| Product model | Managed platform connected to a Git repository | Open-source CLI and renderer producing static files |
+| Authoring | Markdown/MDX, built-in components, web editor, central `docs.json` | Markdown/MDX, built-in and page-local React components, typed `clarify.ts` |
+| API documentation | OpenAPI and AsyncAPI generation, interactive playground, proxy, auth and code examples | OpenAPI 3.0/3.1 reference, MDX embedding, browser request workbench and request code |
+| Search and AI | Managed search and a cited AI assistant; assistant usage is credit based | Static Pagefind search, raw Markdown/OpenAPI, `llms.txt`, and a local MCP search command |
+| Localization and versions | Platform features configured in the site project | Native locale routing and fallback; no native parallel documentation versions yet |
+| Collaboration | Web editor, dashboard, previews and platform analytics | Git pull requests, local preview and a VS Code preview extension |
+| Deployment | Git-connected deployment managed by Mintlify | Pure static output deployed to any static host |
+
+This table describes product boundaries, not equivalence. For example, both products can make documentation available to AI, but a managed conversational assistant and a static `llms.txt` plus MCP index solve different jobs.
+
+## Where Mintlify is stronger
+
+### A complete managed workflow
+
+Mintlify owns more of the operational loop. Its GitHub App deploys changes after a push, while its dashboard and web editor support work that would otherwise require a repository, CI pipeline, preview environment, and separate analytics tools. That is valuable when writers, support teams, and product managers need to contribute without using a local toolchain.
+
+Clarify deliberately does not provide a hosted editor, approval UI, real-time collaboration, or documentation analytics. It fits teams that already trust Git and CI as their collaboration system. Calling that simpler is incomplete: it reduces platform dependency, but leaves the team responsible for its workflow.
+
+### API playground depth
+
+Mintlify can generate endpoint pages from OpenAPI or AsyncAPI and offers `interactive`, `simple`, and disabled playground modes. Its documented capabilities include a proxy, credential handling, generated examples, configurable code samples, prefilled values, and endpoint-level customization.
+
+Clarify has a real request workbench rather than a static schema table: readers can choose a server, enter parameters and authentication, send browser requests, inspect responses, and copy request code. However, requests are made from the browser and remain subject to the target API's CORS and network policy. Clarify does not currently match Mintlify's hosted proxy or AsyncAPI support.
+
+### Search, answers, and insight
+
+Mintlify's assistant indexes published documentation and API specifications, answers with citations, generates code examples, and exposes usage insights. It is a managed product feature available on paid plans and consumes shared AI credits.
+
+Clarify's default search is a static Pagefind index with locale isolation. It also emits raw Markdown, raw OpenAPI files, `llms.txt`, and an Orama index that `clarify mcp` exposes through a local `search_docs` tool. Those artifacts are portable and do not require an AI service, but Clarify does not ship a hosted chat assistant or an analytics dashboard.
+
+## Where Clarify is stronger
+
+### Deployment and source ownership are explicit
+
+`clarify build` writes pre-rendered HTML, hydrated assets, search indexes, raw content, OpenAPI artifacts, and AI discovery files. The result needs only a static file host. There is no production Node.js runtime and no Clarify account required to publish it.
+
+Mintlify content also lives in Git, which is important and should not be understated. The difference is operational ownership: its standard workflow publishes through Mintlify's platform, while Clarify's output is the deployable product. Teams with compliance, air-gapped delivery, or platform portability requirements can inspect and host the complete Clarify build themselves.
+
+### One OpenAPI operation can live inside a workflow guide
+
+Clarify treats the API reference and narrative documentation as two views over the same source. `OpenApiOperation` can place one operation inside an MDX tutorial, and `OpenApiRequest` can put the request workbench next to the business workflow it supports. This keeps endpoint facts in the specification without forcing every reader into a separate reference section.
+
+Mintlify also supports custom endpoint MDX pages and offers a broader managed playground. Clarify's distinction is not that embedding is unique, but that it is part of an open static publishing pipeline and uses the same renderer as the rest of the guide.
+
+### Local search and AI artifacts work without a service account
+
+Pagefind, raw Markdown, `llms.txt`, and the MCP search index are generated during the build. They can be versioned as release artifacts, served from the same origin, mirrored, or inspected in CI. This is useful when the requirement is machine-readable documentation infrastructure rather than a bundled end-user chatbot.
+
+## Important gaps in Clarify today
+
+<Callout type="warning" title="Do not treat this as a parity claim">
+  Clarify does not currently provide native parallel documentation versions, a hosted visual editor, collaboration roles, analytics, a managed AI assistant, AsyncAPI references, or a server-side API proxy. Mintlify is the more complete product when those capabilities should arrive from one vendor.
+</Callout>
+
+Clarify's theme tokens and plugin lifecycle cover meaningful customization, but Mintlify's platform components and visual workflow are more packaged. Conversely, teams that need to replace renderer internals should evaluate Clarify's current theme boundaries carefully; open source does not automatically mean every UI surface already has a stable extension API.
+
+## Which should you choose?
+
+Choose Mintlify when the documentation function needs a managed home: non-engineering browser editing, automatic hosted deployment, analytics, a ready-made AI assistant, and a sophisticated API playground are more important than controlling the complete publishing runtime.
+
+Choose Clarify when static self-hosting, inspectable build artifacts, local-first tooling, built-in multilingual search, OpenAPI inside narrative guides, and direct AI/MCP outputs are requirements. It is especially suitable when Git and CI are already the team's review and release system.
+
+The migration decision should include operating cost, not just subscription cost. Mintlify buys back engineering time by operating the platform. Clarify removes a platform dependency but asks the team to own deployment and any collaboration or analytics systems it needs.
+
+## Sources and scope
+
+This comparison was researched from the products' public documentation and Clarify's current repository. Product capabilities and plan boundaries can change.
+
+- [Mintlify documentation overview](https://www.mintlify.com/docs)
+- [Mintlify global settings and `docs.json`](https://www.mintlify.com/docs/settings/global)
+- [Mintlify API playground](https://www.mintlify.com/docs/api-playground/overview)
+- [Mintlify deployment](https://www.mintlify.com/docs/deploy)
+- [Mintlify assistant](https://www.mintlify.com/docs/ai/assistant)
+- [Clarify features](/features)
+- [Clarify OpenAPI support](/features/openapi)
+- [Clarify deployment](/guides/deployment)
+- [Clarify roadmap](/roadmap)

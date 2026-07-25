@@ -26,14 +26,11 @@ description: 了解此模板使用的 Clarify 配置字段。
   <Property name="theme" type="ClarifyThemeConfig">
     主题预设、颜色 token、圆角 token 和布局设置。
   </Property>
-  <Property name="navbar" type="{ links?: ClarifyNavbarLink[] }">
-    顶部导航链接。站外链接请使用 `external: true`。
+  <Property name="navigation" type="{ menus?: ClarifyNavbarMenu[]; tabs?: ClarifyTabsConfig }">
+    顶部导航菜单、标签页和侧边栏页面。外部 URL 会自动识别。
   </Property>
   <Property name="footer" type="ClarifyFooterConfig">
     页脚链接、社交链接、版权文本，或自定义页脚组件路径。Clarify 品牌标识会始终保留在右下角。
-  </Property>
-  <Property name="tabs" type="ClarifyTabsConfig">
-    顶级导航标签页和侧边栏页面。
   </Property>
   <Property name="i18n" type="ClarifyI18nConfig">
     多语言站点的可选 locale 配置。

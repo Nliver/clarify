@@ -22,6 +22,7 @@ import { PageBanner } from './PageBanner'
 import { PageFooter } from './PageFooter'
 import { PageNavigation } from './PageNavigation'
 import { PageSkeleton } from './PageSkeleton'
+import { PageUpdatedAt } from './PageUpdatedAt'
 import { SectionHashSync } from './SectionHashSync'
 import { SectionProvider, type Section } from './SectionProvider'
 
@@ -158,6 +159,20 @@ type NavigationState = {
   tabs?: NavigationTab[]
 }
 
+function layoutForNavigation(nodes: NavigationNode[], pathname: string, inherited?: 'documentation' | 'blog'): 'documentation' | 'blog' | undefined {
+  for (const node of nodes) {
+    const layout = node.layout ?? inherited
+    if (isSameRoutePath(node.path, pathname)) return layout
+    const childLayout = layoutForNavigation(node.children ?? [], pathname, layout)
+    if (childLayout) return childLayout
+  }
+  return undefined
+}
+
+export function resolvePageLayout(route: RouteItem | undefined, navigation: NavigationNode[], pathname: string): 'documentation' | 'blog' {
+  return route?.layout ?? layoutForNavigation(navigation, pathname) ?? 'documentation'
+}
+
 function navigationFromTabs(tabs: NavigationTab[], pathname: string, locale?: string): NavigationState {
   const currentTab = tabs.find((tab) => isSameRoutePath(tab.path, pathname, locale) || hasPath(tab.children, pathname, locale))
   return {
@@ -222,6 +237,7 @@ function useRouteState(config: Config, routes: RouteItem[], navigation: Navigati
     currentLocaleConfig,
     notFoundRoute,
     currentNavigation,
+    layout: resolvePageLayout(currentRoute, currentNavigation.items, pathname),
     sections,
   }
 }
@@ -409,6 +425,7 @@ export function AppShell(arg0: AppShellProps) {
     currentLocaleConfig,
     notFoundRoute,
     currentNavigation,
+    layout,
     sections,
   } = useRouteState(config, routes, navigation, pathname)
   const text = useBuiltInText(currentLocale)
@@ -519,9 +536,12 @@ export function AppShell(arg0: AppShellProps) {
 
   function renderContent() {
     return (
-      <div className={clsx('clarify-content @container relative flex min-h-screen min-w-0 flex-col px-4 pb-12 sm:px-6 lg:px-8 xl:px-10', layoutConfig.contentClassName)}>
+      <div className={clsx('clarify-content @container relative flex min-h-screen min-w-0 flex-col px-4 pb-12 sm:px-6 lg:px-8 xl:px-10', layoutConfig.contentClassName, layout === 'blog' && 'clarify-content-blog')}>
         <PageActionsProvider route={currentRoute}>
           {renderMain()}
+          <div className="clarify-page-metadata flex w-full justify-end">
+            <PageUpdatedAt updatedAt={currentRoute?.updatedAt} locale={currentLocale} />
+          </div>
           <PageNavigation navigation={currentNavigation.items} currentRoute={currentRoute} />
           {renderFooter()}
         </PageActionsProvider>

@@ -1,0 +1,70 @@
+---
+title: 'Clarify 与 Fern：静态文档还是 API-first 平台？'
+description: "Fern 不只是文档站生成器。它把 API definitions、生成 SDK、API Reference、文档编辑器、AI 能力与托管连接成一个产品。Clarify 的角色更窄：把 MDX 与 OpenAPI 发布为开放的静态文档站，同时提供本地搜索和机器可读产物。"
+keywords: ['clarify', 'documentation', 'blog', 'clarify-vs-fern']
+---
+
+# Clarify 与 Fern：静态文档还是 API-first 平台？
+
+Fern 不只是文档站生成器。它把 API definitions、生成 SDK、API Reference、文档编辑器、AI 能力与托管连接成一个产品。Clarify 的角色更窄：把 MDX 与 OpenAPI 发布为开放的静态文档站，同时提供本地搜索和机器可读产物。
+
+当 API 文档属于更大范围的 API 产品工作流时，这种差异使 Fern 成为最有意义的比较对象。
+
+## 能力边界
+
+| 维度 | Fern | Clarify |
+|---|---|---|
+| 产品模式 | 托管式 API 与文档平台 | 开源静态文档发布工具 |
+| API 来源 | OpenAPI、gRPC/Protobuf、AsyncAPI、OpenRPC、GraphQL 和部分源码格式 | OpenAPI 3.0/3.1 JSON/YAML |
+| API 体验 | 生成 Reference、API Explorer、SDK snippets 和生成示例 | Reference、operation 嵌入、请求工作台和请求代码 |
+| 内容创作 | Markdown/MDX、内置与自定义组件、Fern Editor | Markdown/MDX、内置与页面内 React components、Git workflow |
+| AI | Ask Fern、API、Slack app、托管 MCP、Writer 和生成示例 | Raw content、`llms.txt`、静态 MCP 索引和本地 `search_docs` 命令 |
+| 版本 | Team/Enterprise 方案提供站点级版本 | 暂无原生站点级版本 |
+| 托管 | 默认托管；Enterprise Docker 自托管 | 静态自托管是默认产物 |
+
+## Fern 覆盖更广的 API 生命周期
+
+Fern 生成 API Reference 的来源不止 OpenAPI。官方列出的输入还包括 Protocol Buffers/gRPC、AsyncAPI、OpenRPC、GraphQL，以及部分 Python 或 C++ library source。同一平台还把文档连接到 SDK 生成和 SDK-specific code samples。
+
+Clarify 刻意采用更小的契约：OpenAPI 3.0/3.1 是机器可读 API 来源。renderer 负责鉴权、Schema、示例、请求代码和真实浏览器请求，operation 也能出现在 MDX 教程中。它不生成 SDK，也不支持 Fern 覆盖的其他协议。
+
+应该根据事实来源做选择。如果组织需要标准化多种 API 协议与生成 SDK，Fern 的广度很重要；如果 OpenAPI 加业务流程指南就是完整需求，Clarify 不会额外引入更大的 API 平台。
+
+## Fern 把协作和 AI 作为服务提供
+
+Fern Editor 在仓库文件之外提供浏览器内容编辑。Ask Fern 可出现在文档 UI、API、Slack 和托管 MCP server 中；Fern Writer 能根据 Slack 请求创建文档 Pull Request，生成 API 示例则会跟随规范变化。这些 AI 功能会消耗方案 credits。
+
+Clarify 没有托管编辑器、writing agent、Slack app 或托管问答服务。它的 AI 策略面向产物：静态页面暴露 Markdown、OpenAPI 与 `llms.txt`，生成的 Orama 索引由本地 `clarify mcp` 进程查询。这为自行构建 agent workflow 的团队提供可迁移输入，而不是完整支持产品。
+
+## 版本化与托管体现商业边界
+
+Fern 的站点级版本可以定义不同 tabs、sections、pages 与 API references，共享内容，设置 availability label，处理旧版本路由并限定搜索范围。官方把它标记为 Team 与 Enterprise 功能。Clarify 目前没有等价能力。
+
+Fern 默认托管站点。自托管是 Enterprise 功能，以包含版本更新和健康检查 endpoint 的 Docker image 交付。这能满足受控基础设施要求，但客户运行的仍是授权 Fern runtime。
+
+Clarify 的方向相反：每次普通构建都产生可自托管静态结果。团队可以把它放在 CDN、对象存储或 Web server 后，不需要产品专用 container。代价是 Clarify 不为团队运营 preview、analytics、access control、协作与 AI 服务。
+
+## Clarify 仍然有吸引力的地方
+
+Clarify 无需托管账户即可提供本地 Pagefind 搜索、多语言路由、OpenAPI Reference 和交互请求。原始 Markdown、OpenAPI JSON/YAML、`llms.txt`、sitemap、MCP metadata 与搜索索引都作为可检查构建产物发布。
+
+类型化 TypeScript 配置和插件 hooks 也适合希望让文档行为与应用代码一起审查的团队。Fern 内容同样由源码管理，但它的很大一部分价值来自围绕源码运行的服务。
+
+## 应该选择谁？
+
+当文档属于多协议 API 与 SDK 项目，并且团队重视托管编辑、托管 AI、生成示例、版本化和平台运营时，选择 Fern。预算与方案边界是决策的一部分，尤其是版本化和自托管。
+
+当 OpenAPI 已经足够、静态自托管应是默认而不是 enterprise exception，并且团队希望在不依赖服务的情况下获得本地搜索和 AI-readable artifacts 时，选择 Clarify。同时接受协作、托管 AI、SDK 生成、更广 API 格式与并行版本不在当前范围内。
+
+## 来源与范围
+
+- [Fern Docs 概览](https://buildwithfern.com/learn/docs/getting-started/overview)
+- [编写 Markdown 与 MDX](https://buildwithfern.com/learn/docs/content/write-markdown)
+- [API Reference](https://buildwithfern.com/learn/docs/api-references/overview)
+- [AI 功能](https://buildwithfern.com/learn/docs/ai-features/overview)
+- [版本](https://buildwithfern.com/learn/docs/configuration/versions)
+- [自托管文档](https://buildwithfern.com/learn/docs/self-hosted/overview)
+- [Clarify OpenAPI 支持](/features/openapi)
+- [Clarify MCP 搜索](/features/mcp)
+- [Clarify 部署](/guides/deployment)
+- [Clarify 路线图](/roadmap)

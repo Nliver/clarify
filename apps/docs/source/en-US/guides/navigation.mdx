@@ -1,3 +1,9 @@
+---
+title: 'Configuring the Site'
+description: 'This page brings together the configuration related to the "site experience" in Clarify: top navigation, tabs, the sidebar, theming, multiple languages, the dep…'
+keywords: ['clarify', 'documentation', 'guides', 'navigation']
+---
+
 # Configuring the Site
 
 This page brings together the configuration related to the "site experience" in Clarify: top navigation, tabs, the sidebar, theming, multiple languages, the deployment subpath, and information architecture.
@@ -15,10 +21,15 @@ import { defineConfig } from '@clarify-labs/cli'
 
 export default defineConfig({
   navigation: {
-    links: [
-      { label: 'Get Started', href: '/getting-started' },
-      { label: 'API Documentation', href: '/features/openapi' },
-      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify', external: true },
+    menus: [
+      { label: 'Get Started', page: 'getting-started' },
+      {
+        label: 'Resources',
+        items: [
+          { label: 'API Documentation', page: 'features/openapi' },
+          { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify' },
+        ],
+      },
     ],
   },
 })
@@ -27,8 +38,11 @@ export default defineConfig({
 | Field | Description |
 |------|------|
 | `label` | The display text of the nav item; supports multi-language objects |
-| `href` | The link address; absolute paths are recommended for in-site links |
-| `external` | Whether to treat it as an external link |
+| `href` | A URL; external URLs are detected automatically |
+| `page` | References an MDX page under `source`, without the `.mdx` suffix |
+| `items` | Nested menu items; each item supports `href`, `page`, or another `items` array |
+| `description` | Optional supporting text shown in expanded menus |
+| `icon` | Optional Lucide icon name |
 
 ---
 

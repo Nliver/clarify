@@ -1,54 +1,249 @@
-# Changelog
-
 ---
-## v0.11.0
+title: 'Releases'
+description: 'This page records the major reader-visible changes in Clarify. When a release requires action, its entry links to a durable guide or reference page.'
+keywords: ['clarify', 'documentation', 'changelog']
+---
+
+# Releases
+
+This page records the major reader-visible changes in Clarify. When a release requires action, its entry links to a durable guide or reference page.
+
+Clarify has not reached `1.0.0` yet. During the `0.x` phase, APIs and configuration formats may change without full backward compatibility. Pin the CLI version used by each project and review the release notes before upgrading.
+
+<Release version="v0.12.0">
 
 ### Added
 
-- Added an interactive OpenAPI request workbench that lets readers send API requests and inspect responses directly inside the documentation
-- Added request workbench state management and field-level help hints
+- Added structured `navigation.menus` entries for page links, external links, and nested menus.
+- Added Blog and Releases as first-class page menus in the Clarify documentation.
+
+### Changed
+
+- Replaced the old top-navigation `navigation.links` configuration with `navigation.menus`.
+- Removed the redundant `external` flag; external URLs are detected from their `href`.
+- Renamed shared link types to generic `LinkConfig` types for banners and footers.
+
+### Breaking changes
+
+- Projects using `navigation.links` or `external` must update their configuration before upgrading.
+
+</Release>
+
+<Release version="v0.11.9">
 
 ### Improved
 
-- Refined OpenAPI request control visuals to align with theme tokens
-- Refactored CLI project config and runtime config to unify configuration organization
-- Generalized source-repository feature configuration
-- Fixed the VS Code extension stealing editor focus when the preview updated
-- Polished documentation UI details
+- Bumped workspace package versions to `0.11.9`
 
----
+</Release>
 
-## v0.10.3
+<Release version="v0.11.8">
+
+### Improved
+
+- Bumped workspace package versions to `0.11.8`
+
+</Release>
+
+<Release version="v0.11.7">
+
+### Improved
+
+- Bumped workspace package versions to `0.11.7`
+
+</Release>
+
+<Release version="v0.11.6">
+
+### Improved
+
+- Removed the obsolete tracking page from the website
+
+</Release>
+
+<Release version="v0.11.5">
+
+### Improved
+
+- Bumped workspace package versions to `0.11.5`
+
+</Release>
+
+<Release version="v0.11.4">
 
 ### Added
 
-- Added `Steps`/`Step`, `Tabs`/`Tab`, and more built-in MDX components
-- Supported nested navigation groups to refine sidebar hierarchy
-- Expanded the built-in content component library
+- Implemented fuzzy search for request and response body properties
+
+</Release>
+
+<Release version="v0.11.3">
 
 ### Improved
 
-- Improved OpenAPI controls and the responsive top navigation
-- Improved copy-to-clipboard feedback and the language-switcher menu interaction
-- Simplified the implementation of built-in content components
-- Unified content diagnostics and improved `clarify init` performance
+- Replaced the theme cycle toggle with a selection menu for a better theme-switching experience
 
----
-## v0.10.2
+</Release>
+
+<Release version="v0.11.2">
+
+### Improved
+
+- Bumped workspace package versions to `0.11.2`
+
+</Release>
+
+<Release version="v0.11.1">
+
+### Improved
+
+- Bumped workspace package versions to `0.11.1`
+
+</Release>
+
+<Release version="v0.11.0">
+	<ReleaseItem title="Added">
+
+	- Added an interactive OpenAPI request workbench that lets readers send API requests and inspect responses directly inside the documentation
+	- Added request workbench state management and field-level help hints
+
+	</ReleaseItem>
+	<ReleaseItem title="Improved">
+
+	- Refined OpenAPI request control visuals to align with theme tokens
+	- Refactored CLI project config and runtime config to unify configuration organization
+	- Generalized source-repository feature configuration
+	- Fixed the VS Code extension stealing editor focus when the preview updated
+	- Polished documentation UI details
+
+	</ReleaseItem>
+</Release>
+
+<Release version="v0.10.3">
+	<ReleaseItem title="Added">
+
+	- Added `Steps`/`Step`, `Tabs`/`Tab`, and more built-in MDX components
+	- Supported nested navigation groups to refine sidebar hierarchy
+	- Expanded the built-in content component library
+
+	</ReleaseItem>
+	<ReleaseItem title="Improved">
+
+	- Improved OpenAPI controls and the responsive top navigation
+	- Improved copy-to-clipboard feedback and the language-switcher menu interaction
+	- Simplified the implementation of built-in content components
+	- Unified content diagnostics and improved `clarify init` performance
+
+	</ReleaseItem>
+</Release>
+
+<Release version="v0.10.2">
+	<ReleaseItem title="Added">
+
+	- Added a dedicated Markdown content pipeline: `.md` uses Markdown/HTML semantics while `.mdx` keeps strict JSX semantics
+	- Documented when to choose `.md` or `.mdx`, including their syntax differences
+
+	</ReleaseItem>
+	<ReleaseItem title="Improved">
+
+	- Replaced custom heading ID and syntax-highlighting implementations with the community-maintained `rehype-slug` and `@shikijs/rehype` plugins
+	- Improved code-block language detection, metadata handling, Mermaid rendering, and unknown-language fallback
+
+	</ReleaseItem>
+</Release>
+
+<Release version="v0.10.1">
 
 ### Added
 
-- Added a dedicated Markdown content pipeline: `.md` uses Markdown/HTML semantics while `.mdx` keeps strict JSX semantics
-- Documented when to choose `.md` or `.mdx`, including their syntax differences
+- Added a MermaidViewer component with zoom controls and lazy loading
+- Added lazy-loaded SearchDialog and exported it as default
 
 ### Improved
 
-- Replaced custom heading ID and syntax-highlighting implementations with the community-maintained `rehype-slug` and `@shikijs/rehype` plugins
-- Improved code-block language detection, metadata handling, Mermaid rendering, and unknown-language fallback
+- Enhanced navigation and routing with locale support across components
+- Normalized section IDs in OpenAPI operations for consistency
+- Enhanced OpenAPI webhook support
+- Refactored highlighter handling to use a promise for improved concurrency
+- Updated OpenAPI module to use specPath instead of spec
+- Enhanced Vite adapter with improved hot module handling and route updates
+- Avoided full reload for content HMR
+- Lazy loaded OpenAPI registry in dev
+- Renamed SlotContext to UISlotContext for improved clarity
+- Renamed openApis to openApiSpecs
+- Updated slot naming and references
+- Enhanced ClarifyPlugin and ClarifyHooks types
+- Updated virtual module naming
+- Renamed contentUrl to contentArtifactUrl
+- Updated route and project context types
+- Refactored navigation structure to a unified format
 
----
+</Release>
 
-## v0.8.2
+<Release version="v0.10.0">
+
+### Added
+
+- Implemented ClarifyContext and ClarifyEngine for improved project state management
+- Refactored site discovery to use ClarifyEngine and streamlined route processing
+- Enhanced site discovery process with plugin load phase and content processing hooks
+- Enhanced Vite adapter with context change listeners and improved site discovery
+- Added plugin lifecycle hooks and enhanced plugin sorting logic
+- Implemented build phase hooks in ClarifyEngine
+
+### Improved
+
+- Refactored build and dev commands to utilize ClarifyEngine
+- CLI code quality improvements and ARCHITECTURE docs
+- Removed dead code and reduced duplication
+- Eliminated dead params, deduplicated virtual module resolution
+- Fixed lint errors
+- Performance: skip rehype pipeline in MDX diagnostic compile
+- Lazily load Shiki languages
+
+</Release>
+
+<Release version="v0.9.4">
+
+### Improved
+
+- Added version field to mock contexts for testing consistency
+
+</Release>
+
+<Release version="v0.9.3">
+
+### Improved
+
+- Bumped workspace package versions to `0.9.3`
+
+</Release>
+
+<Release version="v0.9.2">
+
+### Improved
+
+- Added missing path for navigation nodes in search items tests
+
+</Release>
+
+<Release version="v0.9.1">
+
+### Improved
+
+- Updated VS Code extension user guide
+
+</Release>
+
+<Release version="v0.9.0">
+
+### Improved
+
+- Updated VS Code extension asset upload action for improved compatibility
+
+</Release>
+
+<Release version="v0.8.2">
 
 ### Improved
 
@@ -57,9 +252,17 @@
 - Regenerated the CLI bundles so `clarify --version` matches the released patch version
 - Rebuilt the documentation site output so the roadmap and changelog pages reflect the latest patch release
 
----
+</Release>
 
-## v0.8.0
+<Release version="v0.8.1">
+
+### Improved
+
+- Bumped workspace package versions to `0.8.1`
+
+</Release>
+
+<Release version="v0.8.0">
 
 ### Added
 
@@ -74,9 +277,9 @@
 - Improved prose table rendering with wrappers, nowrap headers, and safer inline-code layout inside table cells
 - Improved plugin type exports and runtime slot naming for clearer integration boundaries
 
----
+</Release>
 
-## v0.7.2
+<Release version="v0.7.2">
 
 ### Added
 
@@ -87,17 +290,17 @@
 
 - Improved application shell layout by accounting for dynamic header offsets
 
----
+</Release>
 
-## v0.7.1
+<Release version="v0.7.1">
 
 ### Improved
 
 - Improved footer rendering and marketing surface integration for the website
 
----
+</Release>
 
-## v0.7.0
+<Release version="v0.7.0">
 
 ### Added
 
@@ -109,9 +312,9 @@
 - Refactored Vite and OpenAPI module generation to make API references and inline OpenAPI embeds more reliable
 - Fixed locale-aware OpenAPI spec resolution for inline embeds
 
----
+</Release>
 
-## v0.6.7
+<Release version="v0.6.7">
 
 ### Added
 
@@ -122,9 +325,9 @@
 
 - Improved page title, page action, and content action layout consistency
 
----
+</Release>
 
-## v0.6.6
+<Release version="v0.6.6">
 
 ### Added
 
@@ -134,18 +337,18 @@
 
 - Improved theme color variables and visual consistency across light and dark modes
 
----
+</Release>
 
-## v0.6.5
+<Release version="v0.6.5">
 
 ### Improved
 
 - Migrated theme preference persistence from local storage to cookies
 - Improved theme preference handling for server-rendered pages and client hydration
 
----
+</Release>
 
-## v0.6.4
+<Release version="v0.6.4">
 
 ### Added
 
@@ -155,43 +358,43 @@
 
 - Improved raw content, source links, and content action behavior across generated pages
 
----
+</Release>
 
-## v0.6.3
+<Release version="v0.6.3">
 
 ### Added
 
 - Added `siteUrl`-based SEO artifact generation for `sitemap.xml` and `robots.txt`
 - Added stronger page metadata support for generated static pages
 
----
+</Release>
 
-## v0.6.2
+<Release version="v0.6.2">
 
 ### Improved
 
 - Improved `routePrefix` handling for subpath deployments, internal links, and static assets
 
----
+</Release>
 
-## v0.6.1
+<Release version="v0.6.1">
 
 ### Improved
 
 - Improved multilingual routing, locale fallback behavior, and localized navigation labels
 
----
+</Release>
 
-## v0.6.0
+<Release version="v0.6.0">
 
 ### Added
 
 - Added multilingual documentation support with locale directories and prefixed non-default locale routes
 - Added AI-ready content artifacts including raw Markdown/OpenAPI output and `llms.txt`
 
----
+</Release>
 
-## v0.5.0
+<Release version="v0.5.0">
 
 ### Added
 
@@ -199,18 +402,26 @@
 - Added OpenAPI tag filtering and single-operation embedding inside MDX pages
 - Added request, response, schema, authentication, server, and copyable request-code displays
 
----
+</Release>
 
-## v0.4.0
+<Release version="v0.4.0">
 
 ### Added
 
 - Added the plugin system with build-time hooks for route resolution, virtual modules, HTML transforms, and build completion
 - Added configuration support for redirects, route overrides, external links, icons, and richer sidebar structures
 
----
+</Release>
 
-## v0.2.0
+<Release version="v0.3.0">
+
+### Improved
+
+- Bumped workspace package versions to `0.3.0`
+
+</Release>
+
+<Release version="v0.2.0">
 
 ### Added
 
@@ -222,9 +433,9 @@
 
 - `clarify init` now references `@clarify-labs/cli@^0.2.0` by default when generating projects
 
----
+</Release>
 
-## v0.1.0
+<Release version="v0.1.0">
 
 ### Added
 
@@ -236,3 +447,5 @@
 - Configuration file system (`clarify.ts` / `clarify.js` / `clarify.json`)
 - Basic theme configuration (`theme.preset` and `theme.tokens.colors.primary`)
 - Top navigation configuration
+
+</Release>

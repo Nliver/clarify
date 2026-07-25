@@ -1,54 +1,249 @@
-# 更新日志
-
 ---
-## v0.11.0
+title: '版本列表'
+description: '这里记录 Clarify 面向文档作者和读者的主要版本变化。需要操作说明时，版本条目会链接到长期维护的指南或参考页面。'
+keywords: ['clarify', 'documentation', 'changelog']
+---
+
+# 版本列表
+
+这里记录 Clarify 面向文档作者和读者的主要版本变化。需要操作说明时，版本条目会链接到长期维护的指南或参考页面。
+
+Clarify 目前尚未达到 `1.0.0`。在 `0.x` 阶段，API 和配置格式仍可能发生变化，且不保证完整的向后兼容。请为每个项目锁定所使用的 CLI 版本，并在升级前阅读版本说明。
+
+<Release version="v0.12.0">
 
 ### 新增
 
-- 新增交互式 OpenAPI 请求工作台（Request Workbench），支持在文档中直接发起 API 请求并查看响应
-- 新增请求工作台的状态管理和字段帮助提示
+- 新增结构化的 `navigation.menus`，支持页面链接、外部链接和嵌套菜单。
+- 将博客和版本列表作为 Clarify 文档中的页面菜单加入导航。
+
+### 变更
+
+- 使用 `navigation.menus` 替代旧的顶部导航 `navigation.links` 配置。
+- 移除冗余的 `external` 字段，外部 URL 会根据 `href` 自动识别。
+- 将 Banner 和 Footer 使用的共享链接类型重命名为通用的 `LinkConfig` 类型。
+
+### 不兼容变更
+
+- 使用 `navigation.links` 或 `external` 的项目需要在升级前更新配置。
+
+</Release>
+
+<Release version="v0.11.9">
 
 ### 改进
 
-- 改进 OpenAPI 请求控件的视觉风格，对齐主题 token
-- 重构 CLI 项目配置与运行时配置，统一配置组织方式
-- 泛化源码仓库功能配置
-- 修复 VS Code 扩展在预览更新时抢占编辑器焦点的问题
-- 改进文档界面细节
+- 升级工作区包版本到 `0.11.9`
 
----
+</Release>
 
-## v0.10.3
+<Release version="v0.11.8">
+
+### 改进
+
+- 升级工作区包版本到 `0.11.8`
+
+</Release>
+
+<Release version="v0.11.7">
+
+### 改进
+
+- 升级工作区包版本到 `0.11.7`
+
+</Release>
+
+<Release version="v0.11.6">
+
+### 改进
+
+- 移除官网中过时的追踪页面
+
+</Release>
+
+<Release version="v0.11.5">
+
+### 改进
+
+- 升级工作区包版本到 `0.11.5`
+
+</Release>
+
+<Release version="v0.11.4">
 
 ### 新增
 
-- 新增 `Steps`/`Step`、`Tabs`/`Tab` 等内置 MDX 组件
-- 支持嵌套导航分组，优化侧边栏层级结构
-- 扩展内置内容组件库
+- 请求和响应 body 属性支持模糊搜索
+
+</Release>
+
+<Release version="v0.11.3">
 
 ### 改进
 
-- 改进 OpenAPI 控件和响应式顶部导航
-- 改进内容复制反馈和语言切换菜单交互
-- 简化内置内容组件实现
-- 统一内容诊断信息并改进 `clarify init` 性能
+- 将主题循环切换改为选择菜单，提升主题切换体验
 
----
-## v0.10.2
+</Release>
+
+<Release version="v0.11.2">
+
+### 改进
+
+- 升级工作区包版本到 `0.11.2`
+
+</Release>
+
+<Release version="v0.11.1">
+
+### 改进
+
+- 升级工作区包版本到 `0.11.1`
+
+</Release>
+
+<Release version="v0.11.0">
+	<ReleaseItem title="新增">
+
+	- 新增交互式 OpenAPI 请求工作台（Request Workbench），支持在文档中直接发起 API 请求并查看响应
+	- 新增请求工作台的状态管理和字段帮助提示
+
+	</ReleaseItem>
+	<ReleaseItem title="改进">
+
+	- 改进 OpenAPI 请求控件的视觉风格，对齐主题 token
+	- 重构 CLI 项目配置与运行时配置，统一配置组织方式
+	- 泛化源码仓库功能配置
+	- 修复 VS Code 扩展在预览更新时抢占编辑器焦点的问题
+	- 改进文档界面细节
+
+	</ReleaseItem>
+</Release>
+
+<Release version="v0.10.3">
+	<ReleaseItem title="新增">
+
+	- 新增 `Steps`/`Step`、`Tabs`/`Tab` 等内置 MDX 组件
+	- 支持嵌套导航分组，优化侧边栏层级结构
+	- 扩展内置内容组件库
+
+	</ReleaseItem>
+	<ReleaseItem title="改进">
+
+	- 改进 OpenAPI 控件和响应式顶部导航
+	- 改进内容复制反馈和语言切换菜单交互
+	- 简化内置内容组件实现
+	- 统一内容诊断信息并改进 `clarify init` 性能
+
+	</ReleaseItem>
+</Release>
+
+<Release version="v0.10.2">
+	<ReleaseItem title="新增">
+
+	- 新增独立的 Markdown 内容管线：`.md` 使用 Markdown/HTML 语义，`.mdx` 保持严格 JSX 语义
+	- 在写作指南中新增 `.md` 与 `.mdx` 的选择说明和语法差异
+
+	</ReleaseItem>
+	<ReleaseItem title="改进">
+
+	- 使用社区维护的 `rehype-slug` 和 `@shikijs/rehype` 替换自定义标题 ID 与代码高亮实现
+	- 改进代码块语言、元数据、Mermaid 和未知语言回退处理
+
+	</ReleaseItem>
+</Release>
+
+<Release version="v0.10.1">
 
 ### 新增
 
-- 新增独立的 Markdown 内容管线：`.md` 使用 Markdown/HTML 语义，`.mdx` 保持严格 JSX 语义
-- 在写作指南中新增 `.md` 与 `.mdx` 的选择说明和语法差异
+- 新增 Mermaid 查看器组件，支持缩放控制和懒加载
+- 新增 SearchDialog 懒加载并导出为默认组件
 
 ### 改进
 
-- 使用社区维护的 `rehype-slug` 和 `@shikijs/rehype` 替换自定义标题 ID 与代码高亮实现
-- 改进代码块语言、元数据、Mermaid 和未知语言回退处理
+- 增强导航和路由的 locale 支持
+- 规范化 OpenAPI operation 的 section ID
+- 增强 OpenAPI webhook 支持
+- 重构高亮处理以使用 promise 提升并发性
+- OpenAPI 模块使用 specPath 替代 spec
+- 增强 Vite 适配器的热模块处理和路由更新
+- 避免内容 HMR 时全量刷新
+- 开发环境下懒加载 OpenAPI registry
+- 重命名 SlotContext 为 UISlotContext，提升一致性
+- 重命名 openApis 为 openApiSpecs
+- 更新 slot 命名和引用
+- 增强 ClarifyPlugin 和 ClarifyHooks 类型
+- 更新虚拟模块命名
+- 重命名 contentUrl 为 contentArtifactUrl
+- 更新路由和项目上下文类型
+- 重构导航结构使用统一格式
 
----
+</Release>
 
-## v0.8.2
+<Release version="v0.10.0">
+
+### 新增
+
+- 实现 ClarifyContext 和 ClarifyEngine，改进项目状态管理
+- 重构站点发现使用 ClarifyEngine 并简化路由处理
+- 增强站点发现过程，添加插件加载阶段和内容处理 hook
+- 增强 Vite 适配器，添加上下文变更监听器
+- 添加插件生命周期 hook 和排序逻辑
+- 实现构建阶段 hook
+
+### 改进
+
+- 重构构建和开发命令使用 ClarifyEngine
+- CLI 代码质量提升并补充 ARCHITECTURE 文档
+- 移除死代码并减少重复
+- 消除死参数，去重虚拟模块解析
+- 修复 lint 错误
+- 性能优化，跳过 MDX 诊断编译中的 rehype 管线
+- 懒加载 Shiki 语言
+
+</Release>
+
+<Release version="v0.9.4">
+
+### 改进
+
+- 为测试一致性添加 version 字段到 mock 上下文
+
+</Release>
+
+<Release version="v0.9.3">
+
+### 改进
+
+- 升级工作区包版本到 `0.9.3`
+
+</Release>
+
+<Release version="v0.9.2">
+
+### 改进
+
+- 为搜索项测试中的导航节点添加缺失的 path
+
+</Release>
+
+<Release version="v0.9.1">
+
+### 改进
+
+- 更新 VS Code 扩展用户指南
+
+</Release>
+
+<Release version="v0.9.0">
+
+### 改进
+
+- 更新 VS Code 扩展资源上传动作以提高兼容性
+
+</Release>
+
+<Release version="v0.8.2">
 
 ### 改进
 
@@ -57,9 +252,17 @@
 - 同步更新 CLI 构建产物中的版本号，确保 `clarify --version` 与发布版本一致
 - 重新生成文档站点构建产物，保证文档中的开发路线与更新日志页面反映最新小版本
 
----
+</Release>
 
-## v0.8.0
+<Release version="v0.8.1">
+
+### 改进
+
+- 升级工作区包版本到 `0.8.1`
+
+</Release>
+
+<Release version="v0.8.0">
 
 ### 新增
 
@@ -74,9 +277,9 @@
 - 改进 prose 表格渲染，增加表格包裹层、表头 nowrap 和表格单元格内 inline code 的布局保护
 - 改进插件类型导出和运行时插槽命名，让集成边界更清晰
 
----
+</Release>
 
-## v0.7.2
+<Release version="v0.7.2">
 
 ### 新增
 
@@ -87,17 +290,17 @@
 
 - 改进 AppShell 布局，使其能适配动态 header 高度
 
----
+</Release>
 
-## v0.7.1
+<Release version="v0.7.1">
 
 ### 改进
 
 - 改进页脚渲染和官网营销区域集成
 
----
+</Release>
 
-## v0.7.0
+<Release version="v0.7.0">
 
 ### 新增
 
@@ -109,9 +312,9 @@
 - 重构 Vite 与 OpenAPI 模块生成逻辑，让 API Reference 和内嵌 OpenAPI 更稳定
 - 修复内嵌 OpenAPI 的多语言 spec 解析
 
----
+</Release>
 
-## v0.6.7
+<Release version="v0.6.7">
 
 ### 新增
 
@@ -122,9 +325,9 @@
 
 - 改进页面标题、页面动作和内容动作的布局一致性
 
----
+</Release>
 
-## v0.6.6
+<Release version="v0.6.6">
 
 ### 新增
 
@@ -134,18 +337,18 @@
 
 - 改进主题颜色变量和亮暗模式视觉一致性
 
----
+</Release>
 
-## v0.6.5
+<Release version="v0.6.5">
 
 ### 改进
 
 - 将主题偏好持久化从 localStorage 迁移到 cookie
 - 改进服务端渲染页面和客户端 hydration 中的主题偏好处理
 
----
+</Release>
 
-## v0.6.4
+<Release version="v0.6.4">
 
 ### 新增
 
@@ -155,43 +358,43 @@
 
 - 改进生成页面中的原始内容、源码链接和内容动作行为
 
----
+</Release>
 
-## v0.6.3
+<Release version="v0.6.3">
 
 ### 新增
 
 - 新增基于 `siteUrl` 的 SEO 产物生成，支持 `sitemap.xml` 和 `robots.txt`
 - 新增更完整的静态页面元信息支持
 
----
+</Release>
 
-## v0.6.2
+<Release version="v0.6.2">
 
 ### 改进
 
 - 改进 `routePrefix` 对子路径部署、内部链接和静态资源的处理
 
----
+</Release>
 
-## v0.6.1
+<Release version="v0.6.1">
 
 ### 改进
 
 - 改进多语言路由、locale fallback 行为和导航标题本地化
 
----
+</Release>
 
-## v0.6.0
+<Release version="v0.6.0">
 
 ### 新增
 
 - 新增多语言文档支持，包括 locale 目录和非默认语言路由前缀
 - 新增 AI-ready 内容产物，包括原始 Markdown/OpenAPI 输出和 `llms.txt`
 
----
+</Release>
 
-## v0.5.0
+<Release version="v0.5.0">
 
 ### 新增
 
@@ -199,18 +402,26 @@
 - 新增 OpenAPI tag 过滤和在 MDX 页面中嵌入单个 operation 的能力
 - 新增请求、响应、Schema、认证、服务器信息和可复制请求代码展示
 
----
+</Release>
 
-## v0.4.0
+<Release version="v0.4.0">
 
 ### 新增
 
 - 新增插件系统，提供路由解析、虚拟模块、HTML 变换和构建完成阶段 Hook
 - 新增 redirect、路由覆盖、外链、图标和更丰富侧边栏结构的配置支持
 
----
+</Release>
 
-## v0.2.0
+<Release version="v0.3.0">
+
+### 改进
+
+- 升级工作区包版本到 `0.3.0`
+
+</Release>
+
+<Release version="v0.2.0">
 
 ### 新增
 
@@ -222,9 +433,9 @@
 
 - `clarify init` 生成项目时默认引用 `@clarify-labs/cli@^0.2.0`
 
----
+</Release>
 
-## v0.1.0
+<Release version="v0.1.0">
 
 ### 新增
 
@@ -236,3 +447,5 @@
 - 配置文件系统（`clarify.ts` / `clarify.js` / `clarify.json`）
 - 基础主题配置（`theme.preset` 和 `theme.tokens.colors.primary`）
 - 顶部导航配置
+
+</Release>

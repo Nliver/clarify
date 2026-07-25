@@ -12,6 +12,7 @@ type RouteFixture = Partial<Omit<ContentRoute, 'kind' | 'meta' | 'module' | 'sou
   title?: string
   description?: string
   keywords?: string[]
+  updatedAt?: string
   sections?: ContentRoute['meta']['sections']
   filePath?: string
   pageVirtualModuleId?: string
@@ -21,13 +22,14 @@ type RouteFixture = Partial<Omit<ContentRoute, 'kind' | 'meta' | 'module' | 'sou
 }
 
 function route(overrides: RouteFixture): ContentRoute {
-  const { title, description, keywords, sections, filePath, pageVirtualModuleId, contentVirtualModuleId, sourceEditUrl, openapi, kind = 'markdown+jsx', ...rest } = overrides
+  const { title, description, keywords, updatedAt, sections, filePath, pageVirtualModuleId, contentVirtualModuleId, sourceEditUrl, openapi, kind = 'markdown+jsx', ...rest } = overrides
   const common = {
     path: '/',
     meta: {
       title: title ?? 'Home',
       description,
       keywords,
+      updatedAt,
       sections,
     },
     source: {
@@ -102,7 +104,7 @@ describe('generateRoutesModule', () => {
   it('generates lazy imports and routes array', () => {
     const routes: ContentRoute[] = [
       route({ path: '/', title: 'Home', filePath: '/a/index.mdx', pageVirtualModuleId: 'virtual:clarify-page/index', sourceEditUrl: 'https://github.com/acme/docs/edit/main/index.mdx' }),
-      route({ path: '/about', title: 'About', filePath: '/a/about.mdx', pageVirtualModuleId: 'virtual:clarify-page/about' }),
+      route({ path: '/about', title: 'About', updatedAt: '2025-02-03T04:05:06.000Z', filePath: '/a/about.mdx', pageVirtualModuleId: 'virtual:clarify-page/about' }),
     ]
     const code = generateRoutesModule(routes, { kind: 'flat', nodes: [] })
     expect(code).not.toContain('import Page')
@@ -113,6 +115,7 @@ describe('generateRoutesModule', () => {
     expect(code).toContain('This page could not be loaded')
     expect(code).toContain('lazy: true')
     expect(code).toContain('title: "About"')
+    expect(code).toContain('updatedAt: "2025-02-03T04:05:06.000Z"')
     expect(code).toContain('sourceEditUrl: "https://github.com/acme/docs/edit/main/index.mdx"')
   })
 

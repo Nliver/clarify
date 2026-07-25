@@ -1,0 +1,69 @@
+---
+title: 'Clarify and Docusaurus: an opinionated docs tool or a React framework?'
+description: "Docusaurus and Clarify are both open-source, Git-based static documentation tools. This makes their ownership model more similar than a comparison with a hosted…"
+keywords: ['clarify', 'documentation', 'blog', 'clarify-vs-docusaurus']
+---
+
+# Clarify and Docusaurus: an opinionated docs tool or a React framework?
+
+Docusaurus and Clarify are both open-source, Git-based static documentation tools. This makes their ownership model more similar than a comparison with a hosted platform. The major difference is abstraction: Docusaurus is a mature React site framework with replaceable plugins and themes; Clarify is a more opinionated developer-documentation product with OpenAPI, local search, multilingual routing, and AI artifacts integrated into one build.
+
+## The practical comparison
+
+| Area | Docusaurus | Clarify |
+|---|---|---|
+| Foundation | React SSG with content plugins and themes | React renderer driven by a documentation CLI |
+| Content | MDX v3, React imports, remark/rehype/recma plugins | Markdown/MDX, React imports, built-in documentation and OpenAPI components |
+| Versioning | Native frozen documentation versions and version-aware navigation | No native parallel documentation versions yet |
+| API reference | Usually added through community or third-party plugins | OpenAPI 3.0/3.1 is a first-class content source |
+| Search | First-class Algolia integration; Typesense and local search through community options | Built-in static Pagefind search with locale-specific indexes |
+| Extension | Broad plugin lifecycle, theme components, wrapping and ejecting | Typed build hooks and runtime slots, with a smaller ecosystem |
+| Deployment | Host-agnostic static build | Host-agnostic static build plus raw and AI-oriented artifacts |
+
+## Docusaurus has the broader framework surface
+
+Docusaurus plugins can load content, add routes and data, modify build infrastructure, and pair content models with themes. Its theme aliases and swizzling workflow let teams wrap or eject React components. That is a significant advantage when the documentation site is also a custom website or needs integrations that already exist in the Docusaurus ecosystem.
+
+The flexibility has a maintenance cost. Docusaurus itself warns that unsafe swizzled components can break on minor releases and recommends wrapping rather than ejecting. A highly customized site is partly an application that the owning team must continue to maintain.
+
+Clarify plugins also expose content, route, HTML, SSG, virtual-module and runtime-slot hooks, but its ecosystem and stable UI replacement surface are less mature. Clarify is the better fit only when its built-in product shape is close to what the team wants.
+
+## Versioning is a clear Docusaurus advantage
+
+Docusaurus can freeze the current docs into a version directory, maintain version-specific sidebars, select the latest version, show unreleased or unmaintained banners, and filter search by language and version. Its own guide also gives a useful warning: copied versions increase build time and contributor complexity, so versioning should be used only when readers genuinely need parallel manuals.
+
+Clarify currently has release-note components and reusable version variables, but those are not documentation versioning. It does not yet generate parallel version routes or a version selector. Teams maintaining several supported product or SDK generations should treat this as a deciding gap.
+
+## Clarify integrates developer-documentation infrastructure
+
+Docusaurus does not make OpenAPI its core content model. Teams commonly select and configure a plugin, theme, or separate renderer. Clarify parses OpenAPI during the build, creates full references, embeds operations in MDX guides, validates specifications, and includes a request workbench in the same renderer.
+
+Search shows the same product difference. Docusaurus has first-class Algolia DocSearch integration, including contextual language/version filters and optional Algolia Ask AI. Typesense, local indexes, and custom search are available through community packages or a replaced SearchBar. Clarify ships Pagefind directly, so a multilingual static search works without an external crawler or account, but there is no managed search analytics or bundled conversational assistant.
+
+Clarify additionally publishes raw Markdown, OpenAPI JSON/YAML, `llms.txt`, and an MCP search index. Docusaurus can generate equivalent custom artifacts through plugins, but they are assembly work rather than its default documentation contract.
+
+## Internationalization and deployment
+
+Both products produce static HTML and can be deployed to GitHub Pages, Netlify, Vercel, Cloudflare, object storage, or a conventional web server. Neither requires a proprietary production host.
+
+Docusaurus has mature i18n primitives for translated MDX pages, UI message catalogs, plugin-specific locale files, RTL, hreflang, and separate locale builds. Clarify uses locale directories and localized configuration, keeps locale prefixes consistent, and offers explicit missing-translation strategies. Docusaurus gives plugin authors and large sites more control; Clarify packages the common documentation workflow into fewer moving parts.
+
+## Which should you choose?
+
+Choose Docusaurus when you need native documentation versioning, a mature React plugin/theme ecosystem, several content types, or deep control over the site as an application. It rewards teams willing to own framework configuration and upgrades.
+
+Choose Clarify when OpenAPI references, endpoint embedding, interactive requests, static local search, raw content, and MCP output should work as one documented product rather than a selected plugin stack. Do not choose it today if parallel documentation versions are mandatory.
+
+## Sources and scope
+
+- [Docusaurus introduction](https://docusaurus.io/docs)
+- [React and MDX](https://docusaurus.io/docs/markdown-features/react)
+- [Internationalization](https://docusaurus.io/docs/i18n/introduction)
+- [Versioning](https://docusaurus.io/docs/versioning)
+- [Search](https://docusaurus.io/docs/search)
+- [Plugins](https://docusaurus.io/docs/advanced/plugins)
+- [Swizzling](https://docusaurus.io/docs/swizzling)
+- [Deployment](https://docusaurus.io/docs/deployment)
+- [Clarify OpenAPI support](/features/openapi)
+- [Clarify plugins](/features/plugins)
+- [Clarify roadmap](/roadmap)

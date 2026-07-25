@@ -1,0 +1,74 @@
+---
+title: 'Clarify and VitePress: developer docs or a content-centric Vue SSG?'
+description: "VitePress is a fast, content-centric static site generator powered by Vite and Vue. Clarify is a developer-documentation publisher powered by MDX, React, and Op…"
+keywords: ['clarify', 'documentation', 'blog', 'clarify-vs-vitepress']
+---
+
+# Clarify and VitePress: developer docs or a content-centric Vue SSG?
+
+VitePress is a fast, content-centric static site generator powered by Vite and Vue. Clarify is a developer-documentation publisher powered by MDX, React, and OpenAPI. Both preserve source files and produce portable static sites; they differ in how much domain behavior is built in.
+
+## What each product gives you
+
+| Area | VitePress | Clarify |
+|---|---|---|
+| Content runtime | Markdown compiled as Vue components | Markdown/MDX compiled as React components |
+| Code authoring | Rich Markdown extensions, Shiki annotations, code groups and imported snippets | Shiki, code groups, Mermaid and documentation-oriented MDX primitives |
+| API documentation | Requires a package, custom Vue component, or separate tool | Built-in OpenAPI reference, embedding and request workbench |
+| Search | Built-in MiniSearch local index or Algolia | Built-in Pagefind static index and section results |
+| Themes | Extend the default theme or replace the root `Layout` | Presets and tokens; plugins and slots, but a narrower theme replacement API |
+| Versions | No native docs-version workflow | No native docs-version workflow yet |
+| Deployment | Static `.vitepress/dist` | Static output plus raw content, OpenAPI, `llms.txt` and MCP metadata |
+
+## VitePress excels at Markdown and Vue composition
+
+VitePress's default authoring experience is unusually capable: tables, alerts, syntax highlighting, line highlighting and focus, diffs, code groups, imported source snippets, and included Markdown sections are built in. Every Markdown page becomes a Vue component, so it can use interpolation, directives, `<script setup>`, local styles, imported components, and VitePress runtime data.
+
+For a Vue team building product guides, a framework manual, or a content-rich technical site, this is a direct and flexible model. Vite's development speed and the ability to pass through Vite, Vue, and markdown-it configuration make it a strong foundation rather than a constrained documentation product.
+
+Clarify uses MDX and React instead. It includes task-oriented primitives and allows page-local React components, but its strongest differentiation is not generic component composition. It is the integration of documentation navigation, OpenAPI, search, localization, static artifacts, and AI access.
+
+## Clarify owns the OpenAPI workflow
+
+VitePress can display almost anything a Vue component or plugin can render, including third-party API reference components. However, it does not define a native OpenAPI content contract, operation routes, validation pipeline, or request workbench.
+
+Clarify discovers OpenAPI JSON/YAML alongside MDX, validates it at build time, generates references, embeds selected operations in workflow guides, and lets readers construct and send requests. Teams can build this on VitePress, but they must select the renderer and maintain its integration.
+
+## Search is local in both, with different implementations
+
+VitePress can generate an in-browser MiniSearch index and supports multilingual UI and indexing options. It also integrates Algolia DocSearch and its optional Ask AI interface. Clarify generates Pagefind indexes per locale and includes highlighted page and section matches.
+
+Neither local option is a managed relevance or analytics service. VitePress offers an explicit path to Algolia when that is needed. Clarify complements local search with raw Markdown, `llms.txt`, and a downloadable MCP search index, but does not provide an end-user AI chat panel.
+
+## Theme freedom versus an integrated shell
+
+A VitePress custom theme primarily implements a `Layout` component. Teams can extend the default theme, register global Vue components, or replace it completely. Build hooks can transform page data, head tags and final HTML. This is substantially more freedom than Clarify's current presets, design tokens and selected runtime slots.
+
+Clarify's tradeoff is consistency: its documentation shell, tabs, recursive navigation, locale behavior, OpenAPI UI, content actions, responsive layout and search are designed and tested together. It is quicker when those defaults fit, and more restrictive when they do not.
+
+## Internationalization, versions, and hosting
+
+Both support locale directories and per-locale navigation or theme labels. VitePress notes that root language redirects must be configured at the hosting layer, and RTL support currently needs additional processing. Clarify owns locale-prefixed routes, language switching, RTL and missing-translation behavior as one configuration contract.
+
+Neither product currently offers the frozen, parallel documentation-version workflow found in Docusaurus or hosted platform plans. Teams commonly use separate deployments or custom routing; that should be budgeted as project work.
+
+Both produce static files for any host. Clarify additionally emits machine-readable content artifacts by default, while VitePress offers broader hooks for teams to create their own output pipeline.
+
+## Which should you choose?
+
+Choose VitePress for a Vue-centered team that values its excellent Markdown and code presentation, full theme control, Vite extensibility, and a small general-purpose core. It is especially compelling when API documentation is not central or the team already has a preferred API component.
+
+Choose Clarify when OpenAPI, interactive endpoint guides, multilingual Pagefind search, AI-readable artifacts, and MCP discovery should be integrated without choosing and wiring packages. Choose neither on the assumption that native documentation versioning is included.
+
+## Sources and scope
+
+- [What is VitePress?](https://vitepress.dev/guide/what-is-vitepress)
+- [Markdown extensions](https://vitepress.dev/guide/markdown)
+- [Using Vue in Markdown](https://vitepress.dev/guide/using-vue)
+- [Internationalization](https://vitepress.dev/guide/i18n)
+- [Search](https://vitepress.dev/reference/default-theme-search)
+- [Custom themes](https://vitepress.dev/guide/custom-theme)
+- [Deployment](https://vitepress.dev/guide/deploy)
+- [Clarify features](/features)
+- [Clarify OpenAPI support](/features/openapi)
+- [Clarify deployment](/guides/deployment)

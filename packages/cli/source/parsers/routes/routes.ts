@@ -12,6 +12,8 @@ import { createContentProcessor, type ContentProcessor } from '../content/conten
 import { compileMarkdownContent } from '../markdown/markdown.js'
 import { compileMdxContent } from '../markdown/mdx.js'
 
+import { getFileUpdatedAt, resolveUpdatedAt } from './git-metadata.js'
+
 export type FindContentRoutesOptions = {
   contentProcessor?: ContentProcessor
 }
@@ -132,6 +134,7 @@ export async function findContentRoutes(dir: string, base: string = dir, options
 
       const source = await readFile(fullPath, 'utf-8')
       const { frontmatter, content } = await (options.contentProcessor ?? createContentProcessor()).processMdx(source, fullPath)
+      const updatedAt = resolveUpdatedAt(frontmatter, await getFileUpdatedAt(fullPath, base))
       const page: ClarifyPage = {
         path: cleanPath,
         filePath: fullPath,
@@ -157,6 +160,9 @@ export async function findContentRoutes(dir: string, base: string = dir, options
           title,
           description: typeof page.frontmatter.description === 'string' ? page.frontmatter.description : undefined,
           keywords: frontmatterKeywords(page.frontmatter),
+          group: typeof page.frontmatter.group === 'string' ? page.frontmatter.group : undefined,
+          layout: page.frontmatter.layout === 'documentation' || page.frontmatter.layout === 'blog' ? page.frontmatter.layout : undefined,
+          updatedAt,
           sections: extractMdxSections(page.content),
         },
         module: {
@@ -280,9 +286,17 @@ export async function findLocalizedContentRoutes(contentRoot: string, locales?: 
 
 export function buildNavigation(routes: ContentRoute[]): ClarifyNavigationNode[] {
   const root: ClarifyNavigationNode[] = []
+  const groupedRoutes = new Map<string, ContentRoute[]>()
 
   for (const route of routes) {
     if (route.path === '/' || (route.basePath ?? route.path) === '/404') continue // 首页和 404 不放入侧边栏
+
+    if (route.meta.group) {
+      const grouped = groupedRoutes.get(route.meta.group) ?? []
+      grouped.push(route)
+      groupedRoutes.set(route.meta.group, grouped)
+      continue
+    }
 
     const parts = route.path.replace(/^\//, '').split('/')
     let current = root
@@ -292,6 +306,7 @@ export function buildNavigation(routes: ContentRoute[]): ClarifyNavigationNode[]
       let node = current.find(n => n.path === pathSoFar)
       if (!node) {
         node = { path: pathSoFar, title: i === parts.length - 1 ? route.meta.title : kebabToTitle(parts[i]), children: [] }
+        if (i === parts.length - 1 && route.meta.layout) node.layout = route.meta.layout
         current.push(node)
       }
       if (i === parts.length - 1 && route.meta.sections) {
@@ -302,6 +317,16 @@ export function buildNavigation(routes: ContentRoute[]): ClarifyNavigationNode[]
         current = node.children
       }
     }
+  }
+
+  for (const [title, grouped] of groupedRoutes) {
+    const children = buildNavigation(grouped.map(route => ({
+      ...route,
+      meta: { ...route.meta, group: undefined },
+    })))
+    const node: ClarifyNavigationNode = { path: children[0]?.path ?? '/', title, children }
+    if (grouped[0]?.meta.layout) node.layout = grouped[0].meta.layout
+    root.push(node)
   }
 
   return root
@@ -416,6 +441,7 @@ export function buildNavigationFromConfig(routes: ContentRoute[], config: Clarif
         path: firstNavigationPath(children),
         title: resolveLocalizedText(item.group, '', '') ?? '',
         icon: item.icon,
+        layout: item.layout,
         children,
       }
     }
@@ -489,6 +515,7 @@ function buildLocalizedNavigationForLocale(routes: ContentRoute[], config: Clari
         path: firstNavigationPath(children),
         title: resolveLocalizedText(item.group, locale, locales.default) ?? '',
         icon: item.icon,
+        layout: item.layout,
         children,
       }
     }

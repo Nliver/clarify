@@ -1,0 +1,70 @@
+---
+title: 'Clarify and Fern: static documentation or an API-first platform?'
+description: "Fern is not merely a documentation site generator. Its product connects API definitions, generated SDKs, API references, a documentation editor, AI features, an…"
+keywords: ['clarify', 'documentation', 'blog', 'clarify-vs-fern']
+---
+
+# Clarify and Fern: static documentation or an API-first platform?
+
+Fern is not merely a documentation site generator. Its product connects API definitions, generated SDKs, API references, a documentation editor, AI features, and managed hosting. Clarify has a narrower role: it publishes MDX and OpenAPI as an open, static documentation site with local search and machine-readable artifacts.
+
+That difference makes Fern the strongest comparison when API documentation is part of a larger API product workflow.
+
+## Capability boundaries
+
+| Area | Fern | Clarify |
+|---|---|---|
+| Product model | Managed API and documentation platform | Open-source static documentation publisher |
+| API sources | OpenAPI, gRPC/Protobuf, AsyncAPI, OpenRPC, GraphQL and selected source formats | OpenAPI 3.0/3.1 JSON/YAML |
+| API experience | Generated references, API Explorer, SDK snippets and generated examples | References, operation embedding, request workbench and request code |
+| Authoring | Markdown/MDX, built-in and custom components, Fern Editor | Markdown/MDX, built-in and page-local React components, Git workflow |
+| AI | Ask Fern, API, Slack app, hosted MCP, Writer and generated examples | Raw content, `llms.txt`, static MCP index and local `search_docs` command |
+| Versions | Site-wide versions on Team/Enterprise plans | No native site-wide versions yet |
+| Hosting | Managed by default; Enterprise Docker self-hosting | Static self-hosting is the default output |
+
+## Fern covers a wider API lifecycle
+
+Fern can generate API references from more than OpenAPI. Its documented inputs include Protocol Buffers/gRPC, AsyncAPI, OpenRPC, GraphQL, and selected Python or C++ library sources. The same platform connects documentation to SDK generation and SDK-specific code samples.
+
+Clarify intentionally has a smaller contract: OpenAPI 3.0/3.1 is the machine-readable API source. Its renderer handles authentication, schemas, examples, request code, and real browser requests, and operations can appear inside an MDX tutorial. It does not generate SDKs or document the additional protocols Fern supports.
+
+Choose based on the source of truth. If the organization is standardizing several API protocols and generated SDKs, Fern's breadth is material. If OpenAPI plus narrative workflow guides is the complete requirement, Clarify avoids introducing a broader API platform.
+
+## Fern supplies collaboration and AI as services
+
+Fern Editor gives browser-based content editing in addition to repository files. Ask Fern is available in the documentation UI, through an API, in Slack, and through a hosted MCP server. Fern Writer can create documentation pull requests from Slack requests, while generated API examples stay linked to specification changes. These AI features consume plan credits.
+
+Clarify has no hosted editor, writing agent, Slack app, or managed question-answering service. Its AI strategy is output-oriented: static pages expose Markdown, OpenAPI and `llms.txt`; a generated Orama index can be queried by the local `clarify mcp` process. This gives teams building their own agent workflow portable inputs, not a finished support product.
+
+## Versioning and hosting reveal the commercial boundary
+
+Fern's site-wide versions can define distinct tabs, sections, pages and API references, share content, assign availability labels, route old versions, and scope search. The feature is documented for Team and Enterprise plans. Clarify does not currently have an equivalent.
+
+Fern hosts sites by default. Self-hosting is an Enterprise feature delivered as a ready-to-run Docker image with release updates and health endpoints. This meets controlled-infrastructure requirements, but it remains a licensed Fern runtime that the customer operates.
+
+Clarify takes the inverse approach: every normal build is self-hostable static output. Teams may put it behind a CDN, object store or web server without a product-specific container. The tradeoff is that Clarify does not operate previews, analytics, access control, collaboration, or AI services for the team.
+
+## Where Clarify remains compelling
+
+Clarify provides local Pagefind search, multilingual route behavior, OpenAPI references and interactive requests without requiring a hosted account. Raw Markdown, OpenAPI JSON/YAML, `llms.txt`, sitemap, MCP metadata and the search index ship as inspectable build artifacts.
+
+Its typed TypeScript configuration and plugin hooks also suit teams that want documentation behavior reviewed with application code. Fern content remains source-controlled too, but much of its value comes from the services operating around that source.
+
+## Which should you choose?
+
+Choose Fern when documentation belongs to a multi-protocol API and SDK program, and the team values managed editing, hosted AI, generated examples, versioning, and platform operations. Budget and plan boundaries are part of that choice, especially for versioning and self-hosting.
+
+Choose Clarify when OpenAPI is sufficient, static self-hosting is the default rather than an enterprise exception, and the team wants local search and AI-readable artifacts without a service dependency. Accept that collaboration, hosted AI, SDK generation, broader API formats, and parallel versions are outside its current scope.
+
+## Sources and scope
+
+- [Fern Docs overview](https://buildwithfern.com/learn/docs/getting-started/overview)
+- [Writing Markdown and MDX](https://buildwithfern.com/learn/docs/content/write-markdown)
+- [API references](https://buildwithfern.com/learn/docs/api-references/overview)
+- [AI features](https://buildwithfern.com/learn/docs/ai-features/overview)
+- [Versions](https://buildwithfern.com/learn/docs/configuration/versions)
+- [Self-hosted documentation](https://buildwithfern.com/learn/docs/self-hosted/overview)
+- [Clarify OpenAPI support](/features/openapi)
+- [Clarify MCP search](/features/mcp)
+- [Clarify deployment](/guides/deployment)
+- [Clarify roadmap](/roadmap)

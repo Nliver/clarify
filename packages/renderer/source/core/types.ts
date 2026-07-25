@@ -20,6 +20,7 @@ export type NavigationNode = {
   path: string;
   title: string;
   icon?: string;
+  layout?: 'documentation' | 'blog';
   children?: NavigationNode[];
   sections?: RouteSection[];
 };
@@ -40,6 +41,8 @@ export type RouteItem = {
   sections?: RouteSection[];
   contentArtifactUrl?: string;
   sourceEditUrl?: string;
+  layout?: 'documentation' | 'blog';
+  updatedAt?: string;
 };
 
 export type LogoConfig = string | { light?: string; dark?: string };
@@ -60,20 +63,19 @@ export type LocalesConfig = {
   locales: LocaleConfig[];
 };
 
-export type NavbarLink = {
+export type LinkConfig = {
   label: LocalizedText;
   href: string;
-  external?: boolean;
 };
 
 export type BannerConfig = {
   content: LocalizedText;
   dismissible?: boolean;
-  link?: NavbarLink;
+  link?: LinkConfig;
 };
 
 export type FooterConfig = {
-  links?: NavbarLink[];
+  links?: LinkConfig[];
   socials?: Record<string, string>;
   copyright?: LocalizedText;
 };
@@ -150,6 +152,7 @@ export type PagesItem =
 export type PagesGroup = {
   group: LocalizedText;
   icon?: string;
+  layout?: 'documentation' | 'blog';
   pages: PagesItem[];
 };
 
@@ -163,8 +166,20 @@ export type TabItem = {
 
 export type TabsConfig = TabItem[];
 
+export type NavbarMenuItem = {
+  label: LocalizedText;
+  description?: LocalizedText;
+  icon?: string;
+} & (
+  | { href: string }
+  | { page: string }
+  | { items: NavbarMenuItem[] }
+);
+
+export type NavbarMenu = NavbarMenuItem;
+
 export type NavigationConfig = {
-  links?: NavbarLink[];
+  menus?: NavbarMenu[];
   tabs?: TabsConfig;
 };
 

@@ -1,3 +1,9 @@
+---
+title: '快速开始'
+description: '这篇文档用一条最短路径说明 Clarify 如何工作：安装 CLI、创建内容、启动本地站点、构建静态产物。'
+keywords: ['clarify', 'documentation', 'getting-started']
+---
+
 # 快速开始
 
 这篇文档用一条最短路径说明 Clarify 如何工作：安装 CLI、创建内容、启动本地站点、构建静态产物。
@@ -56,9 +62,9 @@ Clarify = MDX 内容 + `clarify.ts` 配置 + OpenAPI 规范 + 静态站点生成
         "title": "我的文档",
         "description": "基于 Clarify 构建的文档站点",
         "navigation": {
-          "links": [
-            { "label": "文档", "href": "/getting-started" },
-            { "label": "GitHub", "href": "https://github.com/example/project", "external": true }
+          "menus": [
+            { "label": "文档", "page": "getting-started" },
+            { "label": "GitHub", "href": "https://github.com/example/project" }
           ]
         }
       }
@@ -71,9 +77,9 @@ Clarify = MDX 内容 + `clarify.ts` 配置 + OpenAPI 规范 + 静态站点生成
         title: '我的文档',
         description: '基于 Clarify 构建的文档站点',
         navigation: {
-          links: [
-            { label: '文档', href: '/getting-started' },
-            { label: 'GitHub', href: 'https://github.com/example/project', external: true },
+          menus: [
+            { label: '文档', page: 'getting-started' },
+            { label: 'GitHub', href: 'https://github.com/example/project' },
           ],
         },
       })

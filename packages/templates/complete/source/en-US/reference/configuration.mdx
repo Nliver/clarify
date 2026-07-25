@@ -26,14 +26,11 @@ The `clarify.ts` file controls the site shell, theme, navigation, and OpenAPI en
   <Property name="theme" type="ClarifyThemeConfig">
     Preset, color tokens, radius tokens, and layout settings.
   </Property>
-  <Property name="navbar" type="{ links?: ClarifyNavbarLink[] }">
-    Top navigation links. Use `external: true` for off-site links.
+  <Property name="navigation" type="{ menus?: ClarifyNavbarMenu[]; tabs?: ClarifyTabsConfig }">
+    Top navigation menus, tabs, and sidebar pages. External URLs are detected automatically.
   </Property>
   <Property name="footer" type="ClarifyFooterConfig">
     Footer links, social links, copyright text, or a custom footer component path. Clarify branding always remains in the bottom-right corner.
-  </Property>
-  <Property name="tabs" type="ClarifyTabsConfig">
-    Top-level navigation tabs and sidebar pages.
   </Property>
   <Property name="i18n" type="ClarifyI18nConfig">
     Optional locale configuration for multilingual sites.

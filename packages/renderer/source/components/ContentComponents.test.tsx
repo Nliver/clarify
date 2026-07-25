@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { ConfigContext } from '../core/context'
 import type { Config } from '../core/types'
 import { useMDXComponents } from '../mdx/components'
-import { h1, wrapper } from '../mdx/primitives'
+import { h1, Release, ReleaseItem, wrapper } from '../mdx/primitives'
 import { OpenApiRequest } from '../openapi'
 
 import { AccordionGroup } from './AccordionGroup'
@@ -52,6 +52,22 @@ describe('content components', () => {
 
     expect(html).toContain('Page content')
     expect(html).toContain('clarify-mdx-page')
+  })
+
+  it('renders structured release notes', () => {
+    const html = renderToStaticMarkup(
+      <Release version="v1.2.0" date="2026-07-25">
+        <ReleaseItem title="Added">A new feature</ReleaseItem>
+      </Release>,
+    )
+
+    expect(html).toContain('id="v1.2.0"')
+    expect(html).toContain('clarify-release')
+    expect(html).toContain('v1.2.0')
+    expect(html).toContain('2026-07-25')
+    expect(html).toContain('clarify-release-item')
+    expect(html).toContain('sm:sticky')
+    expect(html).not.toContain('shadow-sm')
   })
 
   it('renders grouped collapses as one surface', () => {

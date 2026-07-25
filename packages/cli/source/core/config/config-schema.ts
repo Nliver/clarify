@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import type { ClarifyVariableValue, ClarifyProjectConfig } from '../../types.js'
+import type { ClarifyNavbarMenuItem, ClarifyProjectConfig, ClarifyVariableValue } from '../../types.js'
 
 const clarifyLogoConfigSchema = z.union([
   z.string(),
@@ -55,20 +55,46 @@ const clarifyLocalesConfigSchema = z.object({
   }
 })
 
-const clarifyNavbarLinkSchema = z.object({
+const clarifyLinkConfigSchema = z.object({
   label: clarifyLocalizedTextSchema,
   href: z.string(),
-  external: z.boolean().optional(),
 }).strict()
+
+const clarifyNavbarMenuItemBaseSchema = {
+  label: clarifyLocalizedTextSchema,
+  description: clarifyLocalizedTextSchema.optional(),
+  icon: z.string().optional(),
+}
+
+const clarifyNavbarMenuHrefSchema = z.object({
+  ...clarifyNavbarMenuItemBaseSchema,
+  href: z.string(),
+}).strict()
+
+const clarifyNavbarMenuPageSchema = z.object({
+  ...clarifyNavbarMenuItemBaseSchema,
+  page: z.string(),
+}).strict()
+
+const clarifyNavbarMenuItemsSchema: z.ZodType<ClarifyNavbarMenuItem> = z.lazy(() => z.object({
+  ...clarifyNavbarMenuItemBaseSchema,
+  items: z.array(clarifyNavbarMenuItemSchema),
+}).strict())
+
+const clarifyNavbarMenuItemSchema: z.ZodType<ClarifyNavbarMenuItem> = z.lazy(() => z.union([
+  clarifyNavbarMenuHrefSchema,
+  clarifyNavbarMenuPageSchema,
+  clarifyNavbarMenuItemsSchema,
+]))
 
 const clarifyBannerConfigOptionsSchema = z.object({
   content: clarifyLocalizedTextSchema,
   dismissible: z.boolean().optional(),
-  link: clarifyNavbarLinkSchema.optional(),
+  link: clarifyLinkConfigSchema.optional(),
 }).strict()
 
 const clarifyFooterConfigSchema = z.object({
-  links: z.array(clarifyNavbarLinkSchema).optional(),
+  links: z.array(clarifyLinkConfigSchema).optional(),
   socials: z.record(z.string(), z.string()).optional(),
   copyright: clarifyLocalizedTextSchema.optional(),
 }).strict()
@@ -132,6 +158,7 @@ const clarifyPagesGroupSchema: z.ZodType<
 > = z.lazy(() => z.object({
   group: clarifyLocalizedTextSchema,
   icon: z.string().optional(),
+  layout: z.enum(['documentation', 'blog']).optional(),
   pages: z.array(clarifyPagesItemSchema),
 }).strict())
 
@@ -226,7 +253,7 @@ export const clarifyProjectConfigSchema = z.object({
   theme: clarifyThemeConfigSchema.optional(),
   layout: clarifyLayoutConfigSchema.optional(),
   navigation: z.object({
-    links: z.array(clarifyNavbarLinkSchema).optional(),
+    menus: z.array(clarifyNavbarMenuItemSchema).optional(),
     tabs: clarifyTabsConfigSchema.optional(),
   }).strict().optional(),
   banner: clarifyBannerConfigOptionsSchema.optional(),

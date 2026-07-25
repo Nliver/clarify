@@ -14,14 +14,13 @@ function bannerStorageKey(config: Config, content: string): string {
 type PageBannerLinkProps = {
   href: string
   label: string
-  external?: boolean
   config: Config
   locale?: string
 }
 
 function PageBannerLink(props: PageBannerLinkProps) {
-  const { href, label, external: externalProp, config, locale } = props
-  const external = externalProp ?? isExternalHref(href)
+  const { href, label, config, locale } = props
+  const external = isExternalHref(href)
   const resolvedHref = external ? href : localizeHref(href, config, locale)
   const className = "clarify-banner-link inline-flex h-7 shrink-0 items-center gap-1 rounded-(--clarify-theme-tokens-radius-md) px-2 text-xs/5 font-semibold text-(--clarify-ui-accent-text) no-underline transition hover:bg-(--clarify-ui-hover-background) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--clarify-theme-tokens-colors-primary)"
   const children = (
@@ -74,7 +73,7 @@ export function PageBanner(props: PageBannerProps) {
     <div className="clarify-banner relative flex h-12 items-center border-b border-(--clarify-ui-accent-border) bg-(--clarify-ui-accent-background) px-4 text-sm text-(--clarify-ui-text) dark:border-white/10">
       <div className="mx-auto flex min-w-0 w-full max-w-(--clarify-theme-layout-max-width) items-center justify-center gap-1 pr-9 sm:gap-2">
         <p className="clarify-banner-content m-0 min-w-0 truncate text-left font-medium sm:text-center">{content}</p>
-        {link ? <PageBannerLink href={link.href} label={linkLabel} external={link.external} config={config} locale={currentLocale} /> : null}
+        {link ? <PageBannerLink href={link.href} label={linkLabel} config={config} locale={currentLocale} /> : null}
       </div>
       {banner.dismissible ? (
         <button

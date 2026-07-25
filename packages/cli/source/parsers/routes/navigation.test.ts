@@ -37,6 +37,32 @@ describe('buildNavigation', () => {
     expect(tree[0].children).toHaveLength(2)
     expect(tree[0].children?.map(c => c.path)).toEqual(['/guide/getting-started', '/guide/advanced'])
   })
+
+  it('groups pages by frontmatter metadata', () => {
+    const routes: ContentRoute[] = [
+      mdxRoute({ path: '/first', title: 'First', filePath: 'first.mdx', meta: { group: 'Updates' } }),
+      mdxRoute({ path: '/second', title: 'Second', filePath: 'second.mdx', meta: { group: 'Updates' } }),
+    ]
+
+    expect(buildNavigation(routes)).toEqual([
+      {
+        path: '/first',
+        title: 'Updates',
+        children: [
+          { path: '/first', title: 'First', children: [] },
+          { path: '/second', title: 'Second', children: [] },
+        ],
+      },
+    ])
+  })
+
+  it('carries a page layout into automatic navigation', () => {
+    const routes: ContentRoute[] = [
+      mdxRoute({ path: '/post', title: 'Post', filePath: 'post.mdx', meta: { layout: 'blog' } }),
+    ]
+
+    expect(buildNavigation(routes)[0]?.layout).toBe('blog')
+  })
 })
 
 describe('buildLocalizedNavigation', () => {

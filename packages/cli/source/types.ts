@@ -43,20 +43,31 @@ export type ResolvedClarifyLocalesConfig = {
   locales: ClarifyLocaleConfig[]
 }
 
-export type ClarifyNavbarLink = {
+export type ClarifyLinkConfig = {
   label: ClarifyLocalizedText
   href: string
-  external?: boolean
 }
+
+export type ClarifyNavbarMenuItem = {
+  label: ClarifyLocalizedText
+  description?: ClarifyLocalizedText
+  icon?: string
+} & (
+  | { href: string }
+  | { page: string }
+  | { items: ClarifyNavbarMenuItem[] }
+)
+
+export type ClarifyNavbarMenu = ClarifyNavbarMenuItem
 
 export type ClarifyBannerConfig = {
   content: ClarifyLocalizedText
   dismissible?: boolean
-  link?: ClarifyNavbarLink
+  link?: ClarifyLinkConfig
 }
 
 export type ClarifyFooterConfig = {
-  links?: ClarifyNavbarLink[]
+  links?: ClarifyLinkConfig[]
   socials?: Record<string, string>
   copyright?: ClarifyLocalizedText
 }
@@ -182,6 +193,8 @@ export type ClarifyPagesGroup = {
   group: ClarifyLocalizedText
   /** Icon name from lucide-react, e.g. "BookOpen". */
   icon?: string
+  /** Page layout inherited by pages in this group. */
+  layout?: 'documentation' | 'blog'
   /** Pages or nested groups within this section. */
   pages: ClarifyPagesItem[]
 }
@@ -220,8 +233,8 @@ export type ClarifyTabItem = {
 export type ClarifyTabsConfig = ClarifyTabItem[]
 
 export type ClarifyNavigationConfig = {
-  /** Links displayed in the top navigation. */
-  links?: ClarifyNavbarLink[]
+  /** Menus and links displayed in the top navigation. */
+  menus?: ClarifyNavbarMenu[]
   /** Top-level documentation tabs. Each tab owns its sidebar pages. */
   tabs?: ClarifyTabsConfig
 }
@@ -337,8 +350,12 @@ export type ContentSection = {
 
 export type ContentRouteMeta = {
   title: string
-  description?: string
+  group?: string
   keywords?: string[]
+  description?: string
+  layout?: 'documentation' | 'blog'
+  /** Latest source update as an ISO 8601 timestamp. */
+  updatedAt?: string
   sections?: ContentSection[]
 }
 
@@ -456,6 +473,7 @@ export type ClarifyNavigationNode = {
   path: string
   title: string
   icon?: string
+  layout?: 'documentation' | 'blog'
   children?: ClarifyNavigationNode[]
   sections?: NavigationSection[]
 }

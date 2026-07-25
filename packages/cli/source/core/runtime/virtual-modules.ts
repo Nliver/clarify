@@ -123,6 +123,8 @@ type RuntimeRouteMetadata = {
   title: string
   description?: string
   keywords?: string[]
+  layout?: 'documentation' | 'blog'
+  updatedAt?: string
   sections?: ContentSection[]
 }
 
@@ -153,6 +155,8 @@ function routeToRuntimeManifestEntry(route: ContentRoute, component: RuntimeRout
   if (route.alternates) entry.alternates = route.alternates
   if (route.meta.description) entry.description = route.meta.description
   if (route.meta.keywords?.length) entry.keywords = route.meta.keywords
+  if (route.meta.layout) entry.layout = route.meta.layout
+  if (route.meta.updatedAt) entry.updatedAt = route.meta.updatedAt
   if (route.artifacts?.contentArtifactUrl) entry.contentArtifactUrl = route.artifacts.contentArtifactUrl
   if (route.source?.sourceEditUrl) entry.sourceEditUrl = route.source.sourceEditUrl
   if (route.meta.sections?.length) {

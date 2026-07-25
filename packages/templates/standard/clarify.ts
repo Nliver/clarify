@@ -15,10 +15,10 @@ export default defineConfig({
     },
   },
   navigation: {
-    links: [
+    menus: [
       { label: 'Guides', href: '/guides/writing-content' },
       { label: 'Changelog', href: '/changelog' },
-      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify', external: true },
+      { label: 'GitHub', href: 'https://github.com/taicode-labs/clarify' },
     ],
     tabs: [
       {

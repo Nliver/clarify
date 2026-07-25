@@ -1,6 +1,32 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { scrollToHash } from './AppShell'
+import { resolvePageLayout, scrollToHash } from './AppShell'
+
+describe('resolvePageLayout', () => {
+  const navigation = [
+    {
+      path: '/blog',
+      title: 'Blog',
+      layout: 'blog' as const,
+      children: [
+        { title: 'First post', path: '/blog/first' },
+        { title: 'Second post', path: '/blog/second' },
+      ],
+    },
+  ]
+
+  it('inherits the group layout for pages without an explicit layout', () => {
+    expect(resolvePageLayout(undefined, navigation, '/blog/second')).toBe('blog')
+  })
+
+  it('prefers an explicit page layout over the group layout', () => {
+    expect(resolvePageLayout({ path: '/blog/first', title: 'First post', component: () => null, layout: 'documentation' }, navigation, '/blog/first')).toBe('documentation')
+  })
+
+  it('uses the documentation layout when no layout is configured', () => {
+    expect(resolvePageLayout(undefined, [], '/guide')).toBe('documentation')
+  })
+})
 
 describe('scrollToHash', () => {
   afterEach(() => {
