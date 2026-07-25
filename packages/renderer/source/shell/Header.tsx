@@ -29,7 +29,11 @@ function localizedRoutePath(config: Config, locale: string, route?: RouteItem): 
 
 type LanguageSwitcherProps = { config: Config; currentLocale?: string; currentRoute?: RouteItem }
 
-function LanguageSwitcher(arg0: LanguageSwitcherProps) {  const { config, currentLocale, currentRoute } = arg0
+type NavbarMenuItemLinkProps = { item: NavbarMenuItem; config: Config; currentLocale?: string; nested?: boolean; className?: string }
+type NavbarMenuItemsProps = { items: NavbarMenuItem[]; config: Config; currentLocale?: string }
+
+function LanguageSwitcher(arg0: LanguageSwitcherProps) {
+  const { config, currentLocale, currentRoute } = arg0
 
   const t = useBuiltInText()
   const location = useLocation()
@@ -89,7 +93,8 @@ function LanguageSwitcher(arg0: LanguageSwitcherProps) {  const { config, curren
 
 type TopLevelNavItemProps = { href: string; active?: boolean; children: React.ReactNode }
 
-function TopLevelNavItem(arg0: TopLevelNavItemProps) {  const { href, active = false, children } = arg0
+function TopLevelNavItem(arg0: TopLevelNavItemProps) {
+  const { href, active = false, children } = arg0
 
   const external = isExternalHref(href)
   const className = clsx(
@@ -127,7 +132,8 @@ function TopLevelNavItem(arg0: TopLevelNavItemProps) {  const { href, active = f
 
 type NavbarTabsProps = { tabs?: NavigationTab[]; currentLocale?: string }
 
-function NavbarTabs(arg0: NavbarTabsProps) {  const { tabs, currentLocale } = arg0
+function NavbarTabs(arg0: NavbarTabsProps) {
+  const { tabs, currentLocale } = arg0
 
   const pathname = normalizeRoutePath(useLocation().pathname)
   const t = useBuiltInText()
@@ -151,15 +157,13 @@ function NavbarTabs(arg0: NavbarTabsProps) {  const { tabs, currentLocale } = ar
   )
 }
 
-type NavbarMenuItemProps = { item: NavbarMenuItem; config: Config; currentLocale?: string; nested?: boolean }
-
 function navbarMenuHref(item: NavbarMenuItem, config: Config, currentLocale?: string): string | undefined {
   if ('page' in item) return localizeHref(item.page, config, currentLocale)
   if ('href' in item) return localizeHref(item.href, config, currentLocale)
   return undefined
 }
 
-function NavbarMenuItemLink(arg0: NavbarMenuItemProps) {
+function NavbarMenuItemLink(arg0: NavbarMenuItemLinkProps) {
   const { item, config, currentLocale, nested = false } = arg0
   const href = navbarMenuHref(item, config, currentLocale)
   if (!href) return null
@@ -168,19 +172,21 @@ function NavbarMenuItemLink(arg0: NavbarMenuItemProps) {
   const description = item.description
     ? resolveLocalizedText(item.description, currentLocale, config.locales?.default)
     : undefined
-  const className = clsx(
+  const linkClassName = clsx(
     'clarify-ui-menu-item block rounded-(--clarify-theme-tokens-radius-lg) px-3 py-2 no-underline transition',
     nested ? 'text-sm' : 'min-w-40',
+    arg0.className,
   )
 
   if (isExternalHref(href)) {
-    return <a href={href} target="_blank" rel="noreferrer" className={className}><span className="flex items-center gap-2"><NavigationIcon name={item.icon} className="h-4 w-4" />{label}</span>{description ? <span className="block pl-6 text-xs opacity-70">{description}</span> : null}</a>
+    return <CloseButton as="a" href={href} target="_blank" rel="noreferrer" className={linkClassName}><span className="flex items-center gap-2"><NavigationIcon name={item.icon} className="h-4 w-4" />{label}</span>{description ? <span className="block pl-6 text-xs opacity-70">{description}</span> : null}</CloseButton>
   }
 
-  return <Link to={href} className={className}><span className="flex items-center gap-2"><NavigationIcon name={item.icon} className="h-4 w-4" />{label}</span>{description ? <span className="block pl-6 text-xs opacity-70">{description}</span> : null}</Link>
+  return <CloseButton as={Link} to={href} className={linkClassName}><span className="flex items-center gap-2"><NavigationIcon name={item.icon} className="h-4 w-4" />{label}</span>{description ? <span className="block pl-6 text-xs opacity-70">{description}</span> : null}</CloseButton>
 }
 
-function NavbarMenuItems({ items, config, currentLocale }: { items: NavbarMenuItem[]; config: Config; currentLocale?: string }) {
+function NavbarMenuItems(arg0: NavbarMenuItemsProps) {
+  const { items, config, currentLocale } = arg0
   return items.map((item, index) => {
     if ('items' in item) {
       return (
@@ -190,12 +196,16 @@ function NavbarMenuItems({ items, config, currentLocale }: { items: NavbarMenuIt
         </div>
       )
     }
-    return <MenuItem key={'page' in item ? item.page : item.href}>{({ focus }) => <div className={focus ? 'clarify-ui-menu-item-focus rounded-(--clarify-theme-tokens-radius-lg)' : ''}><NavbarMenuItemLink item={item} config={config} currentLocale={currentLocale} /></div>}</MenuItem>
+    return <MenuItem key={'page' in item ? item.page : item.href}>{({ focus }) => <NavbarMenuItemLink item={item} config={config} currentLocale={currentLocale} className={focus ? 'clarify-ui-menu-item-focus' : undefined} />}</MenuItem>
   })
 }
 
-function NavbarMenus({ menus, config, currentLocale }: { menus?: NavbarMenuItem[]; config: Config; currentLocale?: string }) {
-  const pathname = normalizeRoutePath(useLocation().pathname)
+type NavbarMenusProps = { menus?: NavbarMenuItem[]; config: Config; currentLocale?: string }
+
+function NavbarMenus(arg0: NavbarMenusProps) {
+  const { menus, config, currentLocale } = arg0
+  const location = useLocation()
+  const pathname = normalizeRoutePath(location.pathname)
   if (!menus?.length) return null
 
   return (
@@ -266,7 +276,8 @@ function isActiveTab(tab: NavigationTab, pathname: string, currentLocale?: strin
 
 type ProductTabsProps = { tabs?: NavigationTab[]; currentLocale?: string }
 
-function ProductTabs(arg0: ProductTabsProps) {  const { tabs, currentLocale } = arg0
+function ProductTabs(arg0: ProductTabsProps) {
+  const { tabs, currentLocale } = arg0
 
   const t = useBuiltInText()
   const pathname = normalizeRoutePath(useLocation().pathname)
@@ -397,7 +408,6 @@ export const Header = forwardRef<
   const config = useConfig()
 
   const t = useBuiltInText()
-  const pathname = normalizeRoutePath(useLocation().pathname)
   const { isOpen: mobileNavIsOpen } = useMobileNavigationStore()
   const isInsideMobileNavigation = useIsInsideMobileNavigation()
   const homeHref = resolveHomeHref(config, currentLocale)

@@ -46,7 +46,7 @@ export function ContentActions(arg0: ContentActionsProps) {
     return () => clearTimeout(timeout)
   }, [copyPhase])
 
-  if (!route?.contentArtifactUrl && !route?.sourceEditUrl) return null
+  if (!route?.contentArtifactUrl) return null
 
   const contentArtifactUrl = route.contentArtifactUrl ? resolveContentArtifactUrl(route.contentArtifactUrl, routePrefix) : undefined
   const isOpenApi = route.kind === 'openapi'
@@ -167,17 +167,7 @@ export function ContentActions(arg0: ContentActionsProps) {
               <PrimaryIcon className={`h-4 w-4 shrink-0 ${primaryPhase === 'copying' ? 'animate-spin' : ''}`} />
               <span className="truncate">{primaryPhase === 'idle' ? primaryAction.label : feedbackLabel}</span>
             </button>
-          ) : (
-            <a
-              href={route.sourceEditUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="clarify-content-actions-primary clarify-ui-control inline-flex h-9 min-w-0 items-center gap-2 rounded-md border border-(--clarify-theme-tokens-colors-border) bg-(--clarify-theme-tokens-colors-surface) px-3 no-underline shadow-xs shadow-zinc-900/5 transition"
-            >
-              <PrimaryIcon className="h-4 w-4 shrink-0" />
-              <span className="truncate">{t('contentActions.editPage')}</span>
-            </a>
-          )}
+          ) : null}
           <MenuButton className="clarify-content-actions-trigger clarify-ui-control inline-flex size-9 items-center justify-center rounded-md border border-(--clarify-theme-tokens-colors-border) bg-(--clarify-theme-tokens-colors-surface) shadow-xs shadow-zinc-900/5 transition" aria-label={t('contentActions.copyOptions')}>
             <ChevronDown className="h-3.5 w-3.5" />
           </MenuButton>
@@ -196,28 +186,6 @@ export function ContentActions(arg0: ContentActionsProps) {
           anchor="bottom end"
           className="clarify-content-actions-list clarify-ui-menu z-30 mt-2 w-(--clarify-ui-action-menu-width) origin-top-right rounded-(--clarify-theme-tokens-radius-xl) border border-(--clarify-theme-tokens-colors-border) bg-(--clarify-theme-tokens-colors-surface) p-1.5 shadow-xl shadow-zinc-900/5 transition [--anchor-gap:--spacing(2)] focus:outline-none data-closed:scale-95 data-closed:opacity-0"
         >
-          {route.sourceEditUrl ? (
-            <MenuItem>
-              <a
-                href={route.sourceEditUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="clarify-content-actions-item clarify-ui-menu-item group flex w-full items-center gap-2 rounded-(--clarify-theme-tokens-radius-lg) px-1.5 py-1.5 text-left no-underline transition"
-              >
-                <span className="clarify-ui-menu-icon flex shrink-0 rounded-(--clarify-theme-tokens-radius-md) border border-(--clarify-theme-tokens-colors-border) p-1.5">
-                  <PencilLine className="h-4 w-4" />
-                </span>
-                <span className="flex min-w-0 flex-1 flex-col px-1">
-                  <span className="clarify-ui-menu-title flex items-center gap-1">
-                    {t('contentActions.editPage')}
-                    <ExternalLink className="clarify-ui-menu-icon h-3 w-3" />
-                  </span>
-                  <span className="clarify-ui-menu-description truncate">{t('contentActions.editPageDescription')}</span>
-                </span>
-                <Check className="h-3.5 w-3.5 shrink-0 text-(--clarify-theme-tokens-colors-primary) opacity-0" />
-              </a>
-            </MenuItem>
-          ) : null}
           {actions.slice(0, 1).map((action) => {
             const Icon = action.icon
             const isCopied = copied === action.key

@@ -17,12 +17,11 @@ import { isSameRoutePath, normalizeRoutePath } from '../utils/path'
 import { BuiltInNotFoundPage } from './BuiltInNotFoundPage'
 import { BuiltWithClarify } from './BuiltWithClarify'
 import { PageErrorBoundary } from './ErrorBoundary'
-import { PageActionsProvider } from './PageActions'
+import { PageActionsProvider, PageMetadata } from './PageActions'
 import { PageBanner } from './PageBanner'
 import { PageFooter } from './PageFooter'
 import { PageNavigation } from './PageNavigation'
 import { PageSkeleton } from './PageSkeleton'
-import { PageUpdatedAt } from './PageUpdatedAt'
 import { SectionHashSync } from './SectionHashSync'
 import { SectionProvider, type Section } from './SectionProvider'
 
@@ -441,7 +440,6 @@ export function AppShell(arg0: AppShellProps) {
   const layoutStyle = {
     '--clarify-header-offset': layoutConfig.headerOffset,
   } as CSSProperties
-
   function renderBannerSlot() {
     return (
       <BannerSlot
@@ -469,7 +467,6 @@ export function AppShell(arg0: AppShellProps) {
       />
     )
   }
-
   function renderSidebar() {
     return (
       <aside
@@ -537,11 +534,9 @@ export function AppShell(arg0: AppShellProps) {
   function renderContent() {
     return (
       <div className={clsx('clarify-content @container relative flex min-h-screen min-w-0 flex-col px-4 pb-12 sm:px-6 lg:px-8 xl:px-10', layoutConfig.contentClassName, layout === 'blog' && 'clarify-content-blog')}>
-        <PageActionsProvider route={currentRoute}>
+        <PageActionsProvider route={currentRoute} locale={currentLocale}>
           {renderMain()}
-          <div className="clarify-page-metadata flex w-full justify-end">
-            <PageUpdatedAt updatedAt={currentRoute?.updatedAt} locale={currentLocale} />
-          </div>
+          <PageMetadata updatedAt={currentRoute?.updatedAt} locale={currentLocale} />
           <PageNavigation navigation={currentNavigation.items} currentRoute={currentRoute} />
           {renderFooter()}
         </PageActionsProvider>
@@ -568,8 +563,7 @@ export function AppShell(arg0: AppShellProps) {
           <SectionHashSync hashScrollSuppressedUntilRef={hashScrollSuppressedUntilRef} />
           {renderHeader()}
           {renderLayout()}
-        </SectionProvider>
-      </RuntimeSlotsProvider>
-    </LocaleContext.Provider>
-  )
+        </SectionProvider></RuntimeSlotsProvider>
+    </LocaleContext.Provider>)
+  
 }

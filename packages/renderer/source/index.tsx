@@ -10,6 +10,7 @@ import { Button, Callout, Card, CardGroup, Code, CodeGroup, Collapse, Feedback, 
 import { ConfigProvider, OpenApiSpecsContext, useConfig, useConfigUpdater, useConfigUpdaterOptional, useOpenApiSpecs } from './context'
 import { useMDXComponents } from './mdx/components'
 import { DocShell } from './mdx/DocShell'
+import { Release, ReleaseItem } from './mdx/primitives'
 import { markdownRemarkPlugins, parseCodeMeta } from './mdx/remark'
 import { OpenApiRequest, OpenApiDocument, OpenApiLink, OpenApiOperation, createOpenApiRouteComponent } from './openapi'
 import { render } from './runtime/render'
@@ -18,7 +19,6 @@ import { applyThemeVariables, themeEditorPresets, ThemeEditor } from './theme/Th
 import { ThemeProvider, useTheme } from './theme/ThemeProvider'
 import { ThemeToggle } from './theme/ThemeToggle'
 import { themePresets, themeBootstrapScript } from './theme/variables'
-import { Release, ReleaseItem } from './mdx/primitives'
 import type { Config, RouteItem, RouteSection, RenderOptions, ServerRenderOptions } from './types'
 import { remToPx } from './utils/remToPx'
 

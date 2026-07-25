@@ -3,6 +3,7 @@ import { relative } from 'node:path'
 import { pageVirtualModuleId } from '../../core/runtime/module-ids.js'
 import { generateContentDiagnosticModule, type VirtualModules } from '../../core/runtime/virtual-modules.js'
 import { createProjectContentProcessor } from '../../parsers/content/content.js'
+import { getFileUpdatedAt } from '../../parsers/routes/git-metadata.js'
 import type { ClarifyHookContext, ContentRoute, OpenAPISpec } from '../../types.js'
 
 import { extractOpenAPISections, filterSpecByTags, normalizeOpenAPISpecSectionIds, readOpenAPISpec } from './parser.js'
@@ -39,6 +40,7 @@ export class OpenAPIPluginState {
 
     for (const route of routes) {
       if (route.kind !== 'openapi') continue
+      const updatedAt = await getFileUpdatedAt(route.source.filePath, ctx.contentRoot)
       const specFromCache = specByFilePath.get(route.source.filePath)
       const processor = createProjectContentProcessor(ctx.plugins, ctx)
       const result = specFromCache
@@ -52,15 +54,19 @@ export class OpenAPIPluginState {
       }
 
       const spec = normalizeOpenAPISpecSectionIds(result.spec)
+      const specWithMetadata = updatedAt && spec.info
+        ? { ...spec, info: { ...spec.info, 'x-clarify-updated-at': updatedAt } }
+        : spec
       specByFilePath.set(route.source.filePath, spec)
       const sourceSpecId = sourceSpecIdFromPath(route.source.filePath, ctx.generateOptions.projectRoot)
       route.openapi = { ...route.openapi, sourceSpecId }
 
       route.meta.title = spec.info?.title ?? route.meta.title
       route.meta.description = spec.info?.description ?? route.meta.description
+      route.meta.updatedAt = updatedAt
       route.meta.sections = extractOpenAPISections(spec, route.openapi.tagFilter)
 
-      const pageSpec = route.openapi.tagFilter?.length ? filterSpecByTags(spec, route.openapi.tagFilter) : spec
+      const pageSpec = route.openapi.tagFilter?.length ? filterSpecByTags(specWithMetadata, route.openapi.tagFilter) : specWithMetadata
       const routeSpecModuleId = routeSpecModuleIdFromSourceSpecId(sourceSpecId, route.openapi.tagFilter)
       route.openapi.routeSpecModuleId = routeSpecModuleId
       this.specModules.set(routeSpecModuleId, pageSpec)
