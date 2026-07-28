@@ -288,7 +288,7 @@ describe('createOpenAPIPlugin', () => {
     const modules = await plugin.hooks?.['modules:before']?.(new Map(), createContext(discovered ?? []))
     const routeModule = modules?.get('virtual:clarify-page/api/projects') ?? ''
     const specModuleId = routeModule.match(/import spec from "([^"]+)"/)?.[1]
-    expect(specModuleId).toContain('_tags_Projects')
+    expect(specModuleId).toMatch(/_tags_[a-f0-9]{12}$/)
     expect(modules?.get(specModuleId!)).toContain('List projects')
     expect(modules?.get(specModuleId!)).not.toContain('List users')
   })
@@ -377,7 +377,7 @@ describe('createOpenAPIPlugin', () => {
     const modules = await plugin.hooks?.['modules:before']?.(new Map(), createContext(discovered ?? []))
     const routeModule = modules?.get('virtual:clarify-page/reference/projects') ?? ''
     const specModuleId = routeModule.match(/import spec from "([^"]+)"/)?.[1]
-    expect(specModuleId).toContain('_tags_Projects')
+    expect(specModuleId).toMatch(/_tags_[a-f0-9]{12}$/)
     expect(routeModule).not.toContain('"tagFilter"')
     expect(modules?.get(specModuleId!)).toContain('List projects')
     expect(modules?.get(specModuleId!)).not.toContain('List users')

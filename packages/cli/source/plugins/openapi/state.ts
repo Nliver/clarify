@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { relative } from 'node:path'
 
 import { pageVirtualModuleId } from '../../core/runtime/module-ids.js'
@@ -15,8 +16,8 @@ function sourceSpecIdFromPath(filePath: string, projectRoot: string): string {
 
 function routeSpecModuleIdFromSourceSpecId(sourceSpecId: string, tagFilter?: string[]): string {
   if (!tagFilter?.length) return sourceSpecId
-  const suffix = tagFilter.map(tag => tag.replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '') || 'tag').join('_')
-  return `${sourceSpecId}_tags_${suffix}`
+  const fingerprint = createHash('sha256').update(JSON.stringify(tagFilter)).digest('hex').slice(0, 12)
+  return `${sourceSpecId}_tags_${fingerprint}`
 }
 
 function openAPIRegistryKeys(route: ContentRoute): string[] {

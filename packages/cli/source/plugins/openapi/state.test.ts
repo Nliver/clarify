@@ -53,4 +53,31 @@ describe('OpenAPIPluginState', () => {
     expect(modules.has('virtual:clarify-page/first')).toBe(false)
     expect(modules.has('virtual:clarify-page/second')).toBe(true)
   })
+
+  it('keeps filtered spec modules distinct for Unicode tags', async () => {
+    const specPath = join(projectRoot, 'chat.openapi.json')
+    writeFileSync(specPath, JSON.stringify({
+      openapi: '3.0.0',
+      info: { title: 'Chat', version: '1' },
+      paths: {
+        '/native': { get: { summary: 'Native chat', tags: ['聊天 / 原厂协议'] } },
+        '/compatible': { get: { summary: 'Compatible chat', tags: ['聊天 / 兼容协议'] } },
+      },
+    }))
+    const state = new OpenAPIPluginState()
+    const nativeRoute = contentRoute({ path: '/api/chat-native', kind: 'openapi', filePath: specPath, pageVirtualModuleId: 'virtual:clarify-page/api/chat-native', openapi: { tagFilter: ['聊天 / 原厂协议'] } })
+    const compatibleRoute = contentRoute({ path: '/api/chat-compatible', kind: 'openapi', filePath: specPath, pageVirtualModuleId: 'virtual:clarify-page/api/chat-compatible', openapi: { tagFilter: ['聊天 / 兼容协议'] } })
+    const routes = [nativeRoute, compatibleRoute]
+
+    await state.enrichRoutes(routes, createContext(routes))
+    const modules = state.contributeModules(new Map(), routes)
+    const nativeModuleId = nativeRoute.openapi?.routeSpecModuleId
+    const compatibleModuleId = compatibleRoute.openapi?.routeSpecModuleId
+
+    expect(nativeModuleId).toBeTruthy()
+    expect(compatibleModuleId).toBeTruthy()
+    expect(nativeModuleId).not.toBe(compatibleModuleId)
+    expect(modules.get(`virtual:clarify/openapi-spec/${nativeModuleId}`)).toContain('Native chat')
+    expect(modules.get(`virtual:clarify/openapi-spec/${compatibleModuleId}`)).toContain('Compatible chat')
+  })
 })
