@@ -247,26 +247,43 @@ function getRootSchemaNode(spec: OpenAPISpec, schema: unknown, defaultExpanded?:
 type SchemaNodeProps = { node: SchemaTreeNode; depth?: number; defaultExpanded?: boolean }
 type ExpandableSchemaNodeProps = SchemaNodeProps & { forceExpanded?: boolean }
 
-function EnumValueNode(arg0: SchemaNodeProps): ReactNode {
+function EnumValueWithDescription(arg0: SchemaNodeProps): ReactNode {
   const { node } = arg0
 
   return (
     <li className={clsx('clarify-schema-node m-0 p-0', node.visible === false && 'hidden')}>
-      <div className="flex min-w-0 items-start rounded-(--clarify-theme-tokens-radius-md) px-2 py-2 text-left">
+      <div className="flex min-w-0 items-start gap-3 rounded-(--clarify-theme-tokens-radius-md) px-2 py-2 text-left">
         <div className="min-w-0 flex-1">
           <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5">
-            <span className="text-sm/5 font-semibold text-(--clarify-theme-tokens-colors-foreground)">{node.name}</span>
+            <code className="break-all font-mono text-xs/5 font-semibold text-(--clarify-theme-tokens-colors-foreground)">{node.name}</code>
           </div>
-          {node.description || node.details ? (
-            <div className="mt-0.5 text-sm/5 text-(--clarify-ui-text-soft) *:first:mt-0 *:last:mb-0">
-              {node.description ? <Markdown className="*:first:mt-0 *:last:mb-0">{node.description}</Markdown> : null}
-              {node.details ? <p className="text-xs text-(--clarify-ui-text-faint)">{node.details}</p> : null}
-            </div>
-          ) : null}
+          <div className="mt-1 text-sm/5 text-(--clarify-ui-text-soft) *:first:mt-0 *:last:mb-0">
+            {node.description ? <Markdown className="*:first:mt-0 *:last:mb-0">{node.description}</Markdown> : null}
+            {node.details ? <p className="text-xs text-(--clarify-ui-text-faint)">{node.details}</p> : null}
+          </div>
         </div>
       </div>
     </li>
   )
+}
+
+function CompactEnumValue(arg0: SchemaNodeProps): ReactNode {
+  const { node } = arg0
+
+  return (
+    <li className={clsx('clarify-schema-node inline-flex m-0 p-0', node.visible === false && 'hidden')}>
+      <div className="flex min-w-0 items-start rounded-(--clarify-theme-tokens-radius-md) border border-(--clarify-theme-tokens-colors-border) bg-(--clarify-ui-subtle-background) px-2 py-1 text-left">
+        <code className="break-all font-mono text-xs/5 text-(--clarify-theme-tokens-colors-foreground)">{node.name}</code>
+      </div>
+    </li>
+  )
+}
+
+function EnumValueNode(arg0: SchemaNodeProps): ReactNode {
+  const { node } = arg0
+  return node.description || node.details
+    ? <EnumValueWithDescription node={node} />
+    : <CompactEnumValue node={node} />
 }
 
 function SchemaNode(arg0: ExpandableSchemaNodeProps): ReactNode {
@@ -340,12 +357,17 @@ function SchemaTree(arg0: SchemaTreeProps): ReactNode {
 
   if (nodes.length === 0) return null
 
+  const enumOnly = nodes.every((node) => node.kind === 'enum')
+  const compactEnum = enumOnly && nodes.every((node) => !node.description && !node.details)
+
   return (
     <ul
       role="list"
       className={clsx(
         'm-0 list-none p-0',
-        depth === 0
+        compactEnum
+          ? 'flex flex-wrap gap-1.5 py-1'
+          : depth === 0
           ? 'divide-y divide-(--clarify-theme-tokens-colors-border)'
           : 'ml-2 border-l border-(--clarify-theme-tokens-colors-border) pl-2',
       )}

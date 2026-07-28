@@ -342,6 +342,25 @@ describe('SchemaProperties', () => {
     expect(markup).toContain('archived')
   })
 
+  it('uses a compact wrapping value layout when enum descriptions are absent', () => {
+    const spec: OpenAPISpec = {
+      openapi: '3.1.0',
+      info: { title: 'Test API', version: '1.0.0' },
+      paths: {},
+    }
+
+    const schema = {
+      type: 'object',
+      properties: { status: { type: 'string', enum: ['active', 'archived', 'pending'] } },
+    }
+
+    const markup = renderToStaticMarkup(<SchemaProperties title="Body properties" schema={schema} spec={spec} defaultExpanded />)
+
+    expect(markup).toContain('flex flex-wrap gap-1.5 py-1')
+    expect(markup).toContain('font-mono')
+    expect(markup).toContain('bg-(--clarify-ui-subtle-background)')
+  })
+
   it('collapses enum branches by default', () => {
     const spec: OpenAPISpec = {
       openapi: '3.1.0',
