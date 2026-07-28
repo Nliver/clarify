@@ -95,6 +95,7 @@ export function generateConfigModule(projectConfig: ResolvedProjectConfig, versi
     banner: projectConfig.banner,
     footer: projectConfig.footer,
     locales: projectConfig.locales,
+    defaultLocale: projectConfig.defaultLocale,
     variables: projectConfig.variables,
     features: projectConfig.features,
   }

@@ -34,7 +34,8 @@ export type ClarifyLocalesConfig = {
   default?: string
   /** Missing translation behavior. Fallback uses default locale content. */
   missing?: 'fallback' | '404' | 'hide'
-  locales: ClarifyLocaleConfig[]
+  /** Supported locales for localized content and routes. Omit to only set the built-in UI language. */
+  locales?: ClarifyLocaleConfig[]
 }
 
 export type ResolvedClarifyLocalesConfig = {
@@ -332,6 +333,8 @@ export type ResolvedProjectConfig = {
   banner?: ClarifyBannerConfig
   footer?: ClarifyFooterConfig
   locales?: ResolvedClarifyLocalesConfig
+  /** Default language for built-in UI when locale routing is not configured. */
+  defaultLocale?: string
   variables: ClarifyVariablesConfig
   features: ResolvedClarifyFeaturesConfig
 }

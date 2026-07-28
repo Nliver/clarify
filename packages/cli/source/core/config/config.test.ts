@@ -141,6 +141,12 @@ describe('clarifyProjectConfigSchema', () => {
 })
 
 describe('resolveProjectConfig', () => {
+  it('allows a default locale without enabling localized routes', () => {
+    const result = resolveProjectConfig({ locales: { default: 'zh-CN' } })
+
+    expect(result.defaultLocale).toBe('zh-CN')
+    expect(result.locales).toBeUndefined()
+  })
   it('disables the theme editor by default and allows explicit opt-in', () => {
     expect(resolveProjectConfig({}).features.themeEditor).toEqual({ enabled: false })
     expect(resolveProjectConfig({ features: { themeEditor: true } }).features.themeEditor).toEqual({ enabled: true })

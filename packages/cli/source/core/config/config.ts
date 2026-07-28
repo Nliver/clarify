@@ -32,7 +32,7 @@ export function validateProjectConfig(value: unknown): ClarifyProjectConfig {
 }
 
 function resolveLocalesConfig(locales?: ClarifyLocalesConfig): ResolvedClarifyLocalesConfig | undefined {
-  if (!locales) return undefined
+  if (!locales?.locales) return undefined
 
   const firstLocale = locales.locales[0]?.code
   const defaultLocale = locales.default ?? firstLocale
@@ -87,6 +87,7 @@ export function resolveProjectConfig(config: ClarifyProjectConfig = {}): Resolve
     banner: config.banner,
     footer: config.footer,
     locales: resolveLocalesConfig(config.locales),
+    defaultLocale: config.locales?.default,
     variables: config.variables ?? {},
     features: resolveFeaturesConfig(config.features),
   }

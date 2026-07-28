@@ -769,12 +769,16 @@ type ClarifyLocalesConfig = {
 }
 ```
 
-`locales` 开启原生多语言。启用后，内容通常放在 `source/{locale}/` 下，例如 `source/zh-CN/index.mdx` 和 `source/en-US/index.mdx`。
+`locales` 开启原生多语言。启用后，内容通常放在 `source/{locale}/` 下，例如 `source/zh-CN/index.mdx` 和 `source/en-US/index.mdx`。对于只有一种语言的站点，可以省略 `locales` 数组，仅通过 `default` 设置内置组件的语言：
+
+```ts
+locales: { default: 'zh-CN' }
+```
 
 | 字段 | 必填 | 说明 |
 |------|------|------|
-| `locales` | 是 | 支持的语言列表。每个 `code` 必须唯一。 |
-| `default` | 否 | 默认语言。必须是 `locales` 中的某个 `code`；省略时使用第一个 locale。 |
+| `locales` | 否 | 支持的语言列表。每个 `code` 必须唯一。若只需设置内置组件语言，可以省略。 |
+| `default` | 否 | 默认语言；省略 `locales` 数组时用于设置内置组件语言。配置语言列表时必须是其中某个 `code`；省略时使用第一个 locale。 |
 | `missing` | 否 | 缺失翻译策略，默认值为 `fallback`。 |
 | `locales[].code` | 是 | 语言代码，也是内容目录名和非默认语言路由前缀。 |
 | `locales[].label` | 是 | 语言选择器显示名称。 |

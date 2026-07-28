@@ -32,10 +32,10 @@ const clarifyLocaleConfigSchema = z.object({
 const clarifyLocalesConfigSchema = z.object({
   default: z.string().optional(),
   missing: z.union([z.literal('fallback'), z.literal('404'), z.literal('hide')]).optional(),
-  locales: z.array(clarifyLocaleConfigSchema).min(1),
+  locales: z.array(clarifyLocaleConfigSchema).min(1).optional(),
 }).strict().superRefine((config, ctx) => {
   const localeCodes = new Set<string>()
-  for (const [index, locale] of config.locales.entries()) {
+  for (const [index, locale] of (config.locales ?? []).entries()) {
     if (localeCodes.has(locale.code)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -46,7 +46,7 @@ const clarifyLocalesConfigSchema = z.object({
     localeCodes.add(locale.code)
   }
 
-  if (config.default && !localeCodes.has(config.default)) {
+  if (config.default && config.locales && !localeCodes.has(config.default)) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: 'default must be one of locales.locales',
