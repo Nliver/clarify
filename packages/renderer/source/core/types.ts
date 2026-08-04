@@ -21,6 +21,8 @@ export type NavigationNode = {
   title: string;
   icon?: string;
   layout?: 'documentation' | 'blog';
+  visible?: 'always' | 'active' | 'never';
+  searchable?: boolean;
   children?: NavigationNode[];
   sections?: RouteSection[];
 };
@@ -31,6 +33,7 @@ export type RouteItem = {
   locale?: string;
   isFallback?: boolean;
   isBareAlias?: boolean;
+  searchable?: boolean;
   alternates?: Record<string, string>;
   title: string;
   description?: string;

@@ -153,6 +153,20 @@ function hasPath(nodes: NavigationNode[], pathname: string, locale?: string): bo
   return nodes.some((node) => isSameRoutePath(node.path, pathname, locale) || hasPath(node.children ?? [], pathname, locale))
 }
 
+export function visibleNavigation(nodes: NavigationNode[], pathname: string, locale?: string): NavigationNode[] {
+  return nodes.flatMap((node) => {
+    if (node.visible === 'never') return []
+    if (node.visible === 'active' && !hasPath([node], pathname, locale)) return []
+
+    return [{
+      ...node,
+      children: node.visible === 'active'
+        ? node.children
+        : visibleNavigation(node.children ?? [], pathname, locale),
+    }]
+  })
+}
+
 type NavigationState = {
   items: NavigationNode[]
   tabs?: NavigationTab[]
@@ -172,22 +186,26 @@ export function resolvePageLayout(route: RouteItem | undefined, navigation: Navi
   return route?.layout ?? layoutForNavigation(navigation, pathname) ?? 'documentation'
 }
 
-function navigationFromTabs(tabs: NavigationTab[], pathname: string, locale?: string): NavigationState {
+export function navigationFromTabs(tabs: NavigationTab[], pathname: string, locale?: string): NavigationState {
   const currentTab = tabs.find((tab) => isSameRoutePath(tab.path, pathname, locale) || hasPath(tab.children, pathname, locale))
+  const visibleTabs = tabs
+    .map(tab => ({ ...tab, children: visibleNavigation(tab.children, pathname, locale) }))
+    .filter(tab => tab.children.length > 0)
+  const visibleCurrentTab = currentTab && visibleTabs.find(tab => tab === currentTab || tab.path === currentTab.path)
   return {
-    items: currentTab?.children ?? tabs[0]?.children ?? [],
-    tabs,
+    items: visibleCurrentTab?.children ?? visibleTabs[0]?.children ?? [],
+    tabs: visibleTabs,
   }
 }
 
 function navigationForLocale(navigation: NavigationTree, locale: string | undefined, pathname: string): NavigationState {
   switch (navigation.kind) {
     case 'flat':
-      return { items: navigation.nodes }
+      return { items: visibleNavigation(navigation.nodes, pathname, locale) }
     case 'tabbed':
       return navigationFromTabs(navigation.tabs, pathname, locale)
     case 'localized':
-      return { items: locale ? navigation.locales[locale] ?? [] : [] }
+      return { items: locale ? visibleNavigation(navigation.locales[locale] ?? [], pathname, locale) : [] }
     case 'localized-tabbed':
       return locale && navigation.locales[locale] ? navigationFromTabs(navigation.locales[locale].tabs, pathname, locale) : { items: [] }
   }

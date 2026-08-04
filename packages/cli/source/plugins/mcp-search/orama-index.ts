@@ -149,7 +149,7 @@ export function routeSearchContent(route: ContentRoute): string {
 export function routeToSearchDocument(route: ContentRoute, defaultLocale?: string): McpSearchDocument | null {
   // Skip bare alias routes (e.g. `/path` that just redirects to `/locale/path`)
   // to avoid indexing duplicate content in multilingual sites.
-  if (route.isBareAlias) return null
+  if (route.isBareAlias || route.searchable === false) return null
 
   const content = routeSearchContent(route)
   if (!content.trim()) return null
@@ -218,7 +218,7 @@ export function collectIndexedLocales(routes: ContentRoute[], defaultLocale?: st
   const seen = new Set<string>()
   const locales: string[] = []
   for (const route of routes) {
-    if (route.isBareAlias) continue
+    if (route.isBareAlias || route.searchable === false) continue
     const code = route.locale ?? defaultLocale ?? 'en'
     if (!seen.has(code)) {
       seen.add(code)

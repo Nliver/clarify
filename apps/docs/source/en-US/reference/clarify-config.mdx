@@ -960,6 +960,8 @@ Localized tab item with an icon:
 |-------|------|----------|-------------|
 | `group` | `ClarifyLocalizedText` | Yes | Group title shown in the sidebar. |
 | `icon` | `string` | No | Lucide icon name shown next to the group title. |
+| `visible` | `'always' \| 'active' \| 'never'` | No | Controls when the group appears in navigation. Defaults to `'always'`; `'active'` shows the group only while viewing one of its pages. |
+| `searchable` | `boolean` | No | Whether pages in the group are included in built-in search indexes. Defaults to `true`. The value is inherited by nested groups and pages. |
 | `pages` | `ClarifyPagesItem[]` | Yes | Ordered list of pages under the group. |
 
 A group is useful when a tab has multiple sections:
@@ -969,6 +971,17 @@ A group is useful when a tab has multiple sections:
   group: 'Getting started',
   icon: 'Rocket',
   pages: ['index', 'getting-started', 'guides/writing-content'],
+}
+```
+
+Groups can be shown only while one of their pages is active, while keeping the full group available for local navigation. Set `searchable: false` when the group should not appear in Clarify's built-in search indexes:
+
+```ts
+{
+  group: 'Partner documentation',
+  visible: 'active',
+  searchable: false,
+  pages: ['partners/index', 'partners/authentication'],
 }
 ```
 

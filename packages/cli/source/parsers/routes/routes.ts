@@ -442,6 +442,8 @@ export function buildNavigationFromConfig(routes: ContentRoute[], config: Clarif
         title: resolveLocalizedText(item.group, '', '') ?? '',
         icon: item.icon,
         layout: item.layout,
+        visible: item.visible,
+        searchable: item.searchable,
         children,
       }
     }
@@ -476,6 +478,8 @@ export function buildNavigationFromConfig(routes: ContentRoute[], config: Clarif
       path: children[0]?.path ?? '/',
       title: resolveLocalizedText(group.group, '', '') ?? '',
       icon: group.icon,
+      visible: group.visible,
+      searchable: group.searchable,
       children,
     }
   })
@@ -516,6 +520,8 @@ function buildLocalizedNavigationForLocale(routes: ContentRoute[], config: Clari
         title: resolveLocalizedText(item.group, locale, locales.default) ?? '',
         icon: item.icon,
         layout: item.layout,
+        visible: item.visible,
+        searchable: item.searchable,
         children,
       }
     }
@@ -543,6 +549,8 @@ function buildLocalizedNavigationForLocale(routes: ContentRoute[], config: Clari
       path: children[0]?.path ?? localizedRoutePath('/', locale, locales),
       title: resolveLocalizedText(group.group, locale, locales.default) ?? '',
       icon: group.icon,
+      visible: group.visible,
+      searchable: group.searchable,
       children,
     }
   })

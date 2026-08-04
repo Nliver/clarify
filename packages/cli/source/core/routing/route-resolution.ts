@@ -1,5 +1,5 @@
 import { applyConfiguredPageRoutePaths, buildLocalizedNavigationFromTabsConfig, buildNavigation, buildNavigationFromTabsConfig } from '../../parsers/routes/routes.js'
-import type { ClarifyHookContext, ClarifyPage, ClarifyPlugin, ContentDiagnostic, ContentRoute, NavigationTree } from '../../types.js'
+import type { ClarifyHookContext, ClarifyNavigationNode, ClarifyPage, ClarifyPlugin, ContentDiagnostic, ContentRoute, NavigationTree } from '../../types.js'
 import { runHooks } from '../plugin/hooks.js'
 
 import { describeRouteConflict, findRouteConflicts, formatRouteConflicts, type RouteConflict } from './route-analysis.js'
@@ -103,15 +103,41 @@ function handleRouteConflicts(routes: ContentRoute[], development: boolean): Con
   return routes
 }
 
+function unsearchablePaths(navigation: NavigationTree): Set<string> {
+  const paths = new Set<string>()
+  const visit = (nodes: ClarifyNavigationNode[], inherited = true) => {
+    for (const node of nodes) {
+      const searchable = inherited && node.searchable !== false
+      if (!searchable) paths.add(node.path)
+      visit(node.children ?? [], searchable)
+    }
+  }
+
+  switch (navigation.kind) {
+    case 'flat': visit(navigation.nodes); break
+    case 'tabbed': navigation.tabs.forEach(tab => visit(tab.children)); break
+    case 'localized': Object.values(navigation.locales).forEach(nodes => visit(nodes)); break
+    case 'localized-tabbed': Object.values(navigation.locales).forEach(locale => locale.tabs.forEach(tab => visit(tab.children))); break
+  }
+  return paths
+}
+
+function applySearchability(routes: ContentRoute[], navigation: NavigationTree): ContentRoute[] {
+  const excludedPaths = unsearchablePaths(navigation)
+  return routes.map(route => excludedPaths.has(route.path) ? { ...route, searchable: false } : route)
+}
+
 export async function resolveRouteState(routes: ContentRoute[], plugins: ClarifyPlugin[], ctx: ClarifyHookContext, development: boolean): Promise<{ routes: ContentRoute[], navigation: NavigationTree }> {
   const tabs = ctx.projectConfig.navigation?.tabs
   const configuredRoutes = applyConfiguredPageRoutePaths(routes, tabs, ctx.projectConfig.locales)
   const navigation = buildNavigationTree(configuredRoutes, ctx)
   const resolved = await runHooks(plugins, 'routes:resolved', { routes: configuredRoutes, navigation }, ctx)
-  const finalRoutes = handleRouteConflicts(resolved.routes, development)
+  const conflictRoutes = handleRouteConflicts(resolved.routes, development)
+  const finalNavigation = conflictRoutes === resolved.routes ? resolved.navigation : buildNavigationTree(conflictRoutes, ctx)
+  const finalRoutes = applySearchability(conflictRoutes, finalNavigation)
 
   return {
     routes: finalRoutes,
-    navigation: finalRoutes === resolved.routes ? resolved.navigation : buildNavigationTree(finalRoutes, ctx),
+    navigation: finalNavigation,
   }
 }

@@ -23,7 +23,7 @@ export function buildSearchItems(routes: RouteItem[], navigation: NavigationNode
 
   return routes.flatMap((route) => {
     // Skip bare alias routes (e.g., /path) from search to avoid duplicates in multilingual sites
-    if (route.isBareAlias) return []
+    if (route.isBareAlias || route.searchable === false) return []
     
     const groupTitle = groupTitles.get(route.path)
     const pageItem: SearchItem = {

@@ -78,7 +78,7 @@ async function generateDevSearchIndex(ctx: ClarifyHookContext, root: string, pag
     for (const route of ctx.routes) {
       // Skip bare alias routes (e.g., /path) to avoid indexing duplicates in multilingual sites
       // Only index the full path with locale prefix (e.g., /locale/path)
-      if (route.isBareAlias) continue
+      if (route.isBareAlias || route.searchable === false) continue
       
       const content = routeSearchContent(route)
       if (!content.trim()) continue

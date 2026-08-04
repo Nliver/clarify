@@ -191,9 +191,14 @@ export type ClarifyPagesItem =
   }
 
 export type ClarifyPagesGroup = {
-  group: ClarifyLocalizedText
   /** Icon name from lucide-react, e.g. "BookOpen". */
   icon?: string
+
+  group: ClarifyLocalizedText
+  /** Controls when this group appears in navigation. Defaults to "always". */
+  visible?: 'always' | 'active' | 'never'
+  /** Whether pages in this group are included in built-in search indexes. Defaults to true. */
+  searchable?: boolean
   /** Page layout inherited by pages in this group. */
   layout?: 'documentation' | 'blog'
   /** Pages or nested groups within this section. */
@@ -404,6 +409,8 @@ type ContentRouteBase = {
   basePath?: string
   locale?: string
   isFallback?: boolean
+  /** Whether this route is included in built-in search indexes. Defaults to true. */
+  searchable?: boolean
   /** Indicates this route is a bare alias for the default locale (e.g., /path instead of /locale/path). Should not be indexed. */
   isBareAlias?: boolean
   alternates?: Record<string, string>
@@ -477,6 +484,8 @@ export type ClarifyNavigationNode = {
   title: string
   icon?: string
   layout?: 'documentation' | 'blog'
+  visible?: 'always' | 'active' | 'never'
+  searchable?: boolean
   children?: ClarifyNavigationNode[]
   sections?: NavigationSection[]
 }

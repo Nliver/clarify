@@ -960,6 +960,8 @@ export default defineConfig({
 |------|------|------|------|
 | `group` | `ClarifyLocalizedText` | 是 | 侧边栏分组标题。 |
 | `icon` | `string` | 否 | Lucide 图标名，显示在分组标题旁边。 |
+| `visible` | `'always' \| 'active' \| 'never'` | 否 | 控制分组何时出现在导航中。默认为 `'always'`；`'active'` 仅在访问该分组下的页面时显示。 |
+| `searchable` | `boolean` | 否 | 控制分组页面是否进入内建搜索索引。默认为 `true`，并由嵌套分组和页面继承。 |
 | `pages` | `ClarifyPagesItem[]` | 是 | 分组下的页面列表，按配置顺序展示。 |
 
 当一个 tab 下有多个信息区块时，可以使用分组：
@@ -969,6 +971,17 @@ export default defineConfig({
   group: '快速开始',
   icon: 'Rocket',
   pages: ['index', 'getting-started', 'guides/writing-content'],
+}
+```
+
+分组可以仅在访问其页面时显示，同时保留完整的组内导航。当分组不应出现在 Clarify 的内建搜索索引中时，可设置 `searchable: false`：
+
+```ts
+{
+  group: '合作伙伴文档',
+  visible: 'active',
+  searchable: false,
+  pages: ['partners/index', 'partners/authentication'],
 }
 ```
 

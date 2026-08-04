@@ -118,6 +118,7 @@ type RuntimeRouteIdentity = {
   alternates?: Record<string, string>
   isFallback?: true
   isBareAlias?: true
+  searchable?: false
 }
 
 type RuntimeRouteMetadata = {
@@ -153,6 +154,7 @@ function routeToRuntimeManifestEntry(route: ContentRoute, component: RuntimeRout
   if (route.locale) entry.locale = route.locale
   if (route.isFallback) entry.isFallback = true
   if (route.isBareAlias) entry.isBareAlias = true
+  if (route.searchable === false) entry.searchable = false
   if (route.alternates) entry.alternates = route.alternates
   if (route.meta.description) entry.description = route.meta.description
   if (route.meta.keywords?.length) entry.keywords = route.meta.keywords

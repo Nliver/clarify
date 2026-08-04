@@ -19,6 +19,21 @@ function createContext(): ClarifyContext {
 }
 
 describe('route resolution', () => {
+  it('inherits searchable false from a navigation group', async () => {
+    const context = createContext()
+    context.projectConfig.navigation = {
+      tabs: [{
+        tab: 'Docs',
+        pages: [{ group: 'Partners', searchable: false, pages: ['partners/guide'] }],
+      }],
+    }
+    const route = contentRoute({ path: '/partners/guide', filePath: '/site/source/partners/guide.mdx' })
+
+    const { routes } = await resolveRouteState([route], [], context, false)
+
+    expect(routes[0]?.searchable).toBe(false)
+  })
+
   it('writes resolved page data back without changing route identity', async () => {
     const route = contentRoute({
       path: '/guide',

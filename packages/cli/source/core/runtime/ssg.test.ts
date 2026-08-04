@@ -208,6 +208,16 @@ describe('injectSSRIntoTemplate', () => {
     expect(html).not.toContain('data-pagefind-ignore')
   })
 
+  it('adds data-pagefind-ignore to routes excluded from search', () => {
+    const html = injectSSRIntoTemplate(baseTemplate, '<h1>Partners</h1>', baseConfig, route({
+      path: '/partners',
+      searchable: false,
+      title: 'Partners',
+      filePath: '/content/partners.mdx',
+    }))
+    expect(html).toContain('<div id="root" data-pagefind-ignore><h1>Partners</h1></div>')
+  })
+
   it('does not add data-pagefind-ignore to localized routes', () => {
     const config: ResolvedProjectConfig = {
       ...baseConfig,

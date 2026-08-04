@@ -94,7 +94,7 @@ export function injectSSRIntoTemplate(template: string, appHtml: string, context
   // Replace <div id="root">...</div> with SSR rendered content
   // For bare alias routes (e.g., /path) in multilingual sites, mark the root div
   // with data-pagefind-ignore to prevent Pagefind from indexing duplicates
-  const dataPagefindIgnore = route?.isBareAlias ? ' data-pagefind-ignore' : ''
+  const dataPagefindIgnore = route?.isBareAlias || route?.searchable === false ? ' data-pagefind-ignore' : ''
   html = html.replace(/<div id="root">([\s\S]*?)<\/div>/, `<div id="root"${dataPagefindIgnore}>${appHtml}</div>`)
 
   return html

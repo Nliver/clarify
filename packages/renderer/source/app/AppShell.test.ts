@@ -1,6 +1,38 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { resolvePageLayout, scrollToHash } from './AppShell'
+import { navigationFromTabs, resolvePageLayout, scrollToHash, visibleNavigation } from './AppShell'
+
+describe('visibleNavigation', () => {
+  const navigation = [
+    { path: '/guide', title: 'Guide', children: [{ path: '/guide/start', title: 'Start' }] },
+    { path: '/partner', title: 'Partner', visible: 'active' as const, children: [
+      { path: '/partner/overview', title: 'Overview' },
+      { path: '/partner/auth', title: 'Authentication' },
+    ] },
+    { path: '/legacy', title: 'Legacy', visible: 'never' as const, children: [{ path: '/legacy/api', title: 'API' }] },
+  ]
+
+  it('shows active groups only while visiting one of their pages', () => {
+    expect(visibleNavigation(navigation, '/guide/start').map(node => node.title)).toEqual(['Guide'])
+    expect(visibleNavigation(navigation, '/partner/auth')).toEqual([
+      expect.objectContaining({ title: 'Guide' }),
+      expect.objectContaining({ title: 'Partner', children: navigation[1]?.children }),
+    ])
+  })
+
+  it('keeps the matching tab and full group for direct links', () => {
+    const tabs = [
+      { type: 'tab' as const, path: '/guide', title: 'Docs', children: [navigation[0]!] },
+      { type: 'tab' as const, path: '/partner', title: 'Partners', children: [navigation[1]!] },
+    ]
+
+    expect(navigationFromTabs(tabs, '/guide/start').tabs?.map(tab => tab.title)).toEqual(['Docs'])
+    expect(navigationFromTabs(tabs, '/partner/auth')).toMatchObject({
+      items: [expect.objectContaining({ title: 'Partner' })],
+      tabs: [expect.objectContaining({ title: 'Docs' }), expect.objectContaining({ title: 'Partners' })],
+    })
+  })
+})
 
 describe('resolvePageLayout', () => {
   const navigation = [

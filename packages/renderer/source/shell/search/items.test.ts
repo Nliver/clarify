@@ -5,6 +5,17 @@ import type { NavigationNode, RouteItem } from '../../core/types'
 import { buildSearchItems } from './items'
 
 describe('buildSearchItems', () => {
+  it('skips routes marked as not searchable', () => {
+    const routes: RouteItem[] = [
+      { path: '/public', title: 'Public', component: () => null, kind: 'markdown', searchable: true },
+      { path: '/partners', title: 'Partners', component: () => null, kind: 'markdown', searchable: false },
+    ]
+
+    const items = buildSearchItems(routes, [])
+
+    expect(items.map(item => item.url)).toEqual(['/public'])
+  })
+
   it('builds search items from routes and navigation', () => {
     const routes: RouteItem[] = [
       {
