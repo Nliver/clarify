@@ -1,27 +1,18 @@
-import clsx from 'clsx'
-import { Suspense, lazy, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import type { ComponentType, CSSProperties } from 'react'
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
+import { lazy, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import type { ComponentType } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { LocaleContext } from '../context'
 import { useConfig } from '../core/context'
 import { useBuiltInText } from '../core/i18n'
-import { Header, Navigation } from '../shell'
-import { RuntimeSlot, RuntimeSlotsProvider, type RuntimeSlotRegistry } from '../slots'
+import { RuntimeSlotsProvider, type RuntimeSlotRegistry } from '../slots'
 import { getStoredLocalePreference, storeLocalePreference } from '../theme/cookies'
 import type { RouteItem, Config, LocaleConfig, NavigationNode, NavigationTab, NavigationTree } from '../types'
 import { safeDecodeURIComponent } from '../utils/hash'
 import { resolveLocalizedText } from '../utils/localized-text'
 import { isSameRoutePath, normalizeRoutePath } from '../utils/path'
 
-import { BuiltInNotFoundPage } from './BuiltInNotFoundPage'
-import { BuiltWithClarify } from './BuiltWithClarify'
-import { PageErrorBoundary } from './ErrorBoundary'
-import { PageActionsProvider, PageMetadata } from './PageActions'
-import { PageBanner } from './PageBanner'
-import { PageFooter } from './PageFooter'
-import { PageNavigation } from './PageNavigation'
-import { PageSkeleton } from './PageSkeleton'
+import { AppShellLayout, type AppShellLayoutConfig } from './AppShellLayout'
 import { SectionHashSync } from './SectionHashSync'
 import { SectionProvider, type Section } from './SectionProvider'
 
@@ -29,31 +20,6 @@ export type AppShellProps = {
   routes: RouteItem[]
   navigation: NavigationTree
   runtimeSlots?: RuntimeSlotRegistry
-}
-
-type BannerSlotProps = {
-  activeBannerKey: string | undefined
-  dismissedBannerKey: string | undefined
-  bannerResolved: boolean
-  onDismiss: () => void
-  config: Config
-  locale?: string
-}
-
-function BannerSlot(props: BannerSlotProps) {
-  const { activeBannerKey, dismissedBannerKey, bannerResolved, onDismiss, config, locale } = props
-  // 直接在插槽内部创建默认组件，这样它可以访问到上下文
-  function DefaultBannerComponent() {
-    const hasBanner = bannerResolved && Boolean(config.banner) && dismissedBannerKey !== activeBannerKey
-    if (!hasBanner) return null
-    return <PageBanner currentLocale={locale} onDismiss={onDismiss} />
-  }
-  
-  return <RuntimeSlot name="page.banner.replace" default={DefaultBannerComponent} />
-}
-
-function DefaultFooterComponent() {
-  return <PageFooter />
 }
 
 function routeForPath(routes: RouteItem[], pathname: string): RouteItem | undefined {
@@ -375,13 +341,7 @@ function useAppShellDocumentEffects(arg0: AppShellDocumentEffectsArgs) {
 
 type LayoutVariant = 'base' | 'banner' | 'tabs' | 'tabs-banner'
 
-type LayoutConfig = {
-  headerOffset: string
-  sidebarScrollClassName: string
-  contentClassName: string
-}
-
-const appShellLayoutConfig: Record<LayoutVariant, LayoutConfig> = {
+const appShellLayoutConfig: Record<LayoutVariant, AppShellLayoutConfig> = {
   base: {
     headerOffset: '3.5rem',
     sidebarScrollClassName: 'lg:top-14 lg:h-(--clarify-sidebar-height) lg:pt-10',
@@ -411,18 +371,8 @@ function getLayoutVariant(hasTabs: boolean, hasBanner: boolean): LayoutVariant {
   return 'base'
 }
 
-function getAppShellLayoutConfig(hasTabs: boolean, hasBanner: boolean): LayoutConfig {
+function getAppShellLayoutConfig(hasTabs: boolean, hasBanner: boolean): AppShellLayoutConfig {
   return appShellLayoutConfig[getLayoutVariant(hasTabs, hasBanner)]
-}
-
-type NotFoundRouteElementProps = {
-  component?: ComponentType;
-}
-
-function NotFoundRouteElement(props: NotFoundRouteElementProps) {
-  const { component: RouteComponent } = props
-  if (!RouteComponent) return <BuiltInNotFoundPage />
-  return <RouteComponent />
 }
 
 export function AppShell(arg0: AppShellProps) {
@@ -455,132 +405,29 @@ export function AppShell(arg0: AppShellProps) {
   useAppShellNavigationEffects({ config, currentRoute, explicitLocale, hashScrollSuppressedUntilRef, location, navigate, pathname, storedLocale })
   useAppShellDocumentEffects({ currentLocale, currentLocaleConfig, config, route: currentRoute ?? notFoundRoute })
 
-  const layoutStyle = {
-    '--clarify-header-offset': layoutConfig.headerOffset,
-  } as CSSProperties
-  function renderBannerSlot() {
-    return (
-      <BannerSlot
-        activeBannerKey={activeBannerKey}
-        dismissedBannerKey={dismissedBannerKey}
-        bannerResolved={bannerResolved}
-        onDismiss={dismissBanner}
-        config={config}
-        locale={currentLocale}
-      />
-    )
-  }
-
-  function renderHeader() {
-    return (
-      <Header
-        ref={headerRef}
-        topAreaRef={headerTopAreaRef}
-        navigation={currentNavigation.items}
-        tabs={currentNavigation.tabs}
-        routes={routes}
-        currentLocale={currentLocale}
-        currentRoute={currentRoute}
-        banner={renderBannerSlot()}
-      />
-    )
-  }
-  function renderSidebar() {
-    return (
-      <aside
-        data-pagefind-ignore
-        className="clarify-sidebar hidden lg:block lg:self-stretch lg:bg-(--clarify-theme-tokens-colors-background) lg:px-5 xl:px-6"
-      >
-        <div className={clsx('clarify-sidebar-scroll lg:sticky lg:z-30 lg:overflow-y-auto lg:pb-8', layoutConfig.sidebarScrollClassName)}>
-          <Navigation navigation={currentNavigation.items} currentLocale={currentLocale} />
-        </div>
-      </aside>
-    )
-  }
-
-  function renderRouteElements() {
-    return (
-      <Routes>
-        {renderRoutes.map((route) => (
-          <Route key={route.path} path={route.path} element={<route.component />} />
-        ))}
-        <Route path="*" element={<NotFoundRouteElement component={NotFoundRouteComponent} />} />
-      </Routes>
-    )
-  }
-
-  function renderMain() {
-    return (
-      <main className="clarify-main min-w-0 flex-auto" data-pagefind-body>
-        <PageErrorBoundary
-          key={pathname}
-          title={text('renderError.title')}
-          description={text('renderError.description')}
-          reloadLabel={text('renderError.reload')}
-          detailsLabel={text('renderError.details')}
-          pathLabel={text('renderError.path')}
-          typeLabel={text('renderError.type')}
-          messageLabel={text('renderError.message')}
-          stackLabel={text('renderError.stack')}
-          componentStackLabel={text('renderError.componentStack')}
-          copyLabel={text('actions.copy')}
-          copiedLabel={text('actions.copied')}
-          path={pathname}
-        >
-          <Suspense fallback={<PageSkeleton />}>
-            {renderRouteElements()}
-          </Suspense>
-        </PageErrorBoundary>
-      </main>
-    )
-  }
-
-  function renderFooter() {
-    return (
-      <div className="clarify-page-footer-region mt-8 grid gap-5 border-t border-(--clarify-theme-tokens-colors-border) pt-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
-        <div className="clarify-page-footer-slot min-w-0">
-          <RuntimeSlot name="page.footer.before" />
-          <RuntimeSlot name="page.footer.replace" default={DefaultFooterComponent} />
-        </div>
-        <div className="clarify-page-attribution flex justify-end sm:self-end">
-          <BuiltWithClarify version={config.version} />
-        </div>
-      </div>
-    )
-  }
-
-  function renderContent() {
-    return (
-      <div className={clsx('clarify-content @container relative flex min-h-screen min-w-0 flex-col px-4 pb-12 sm:px-6 lg:px-8 xl:px-10', layoutConfig.contentClassName, layout === 'blog' && 'clarify-content-blog')}>
-        <PageActionsProvider route={currentRoute} locale={currentLocale}>
-          {renderMain()}
-          <PageMetadata updatedAt={currentRoute?.updatedAt} locale={currentLocale} />
-          <PageNavigation navigation={currentNavigation.items} currentRoute={currentRoute} />
-          {renderFooter()}
-        </PageActionsProvider>
-      </div>
-    )
-  }
-
-  function renderLayout() {
-    return (
-      <div
-        className="clarify-layout mx-auto grid w-full max-w-(--clarify-theme-layout-max-width) grid-cols-1 lg:grid-cols-(--clarify-layout-sidebar-grid) xl:grid-cols-(--clarify-layout-sidebar-grid-wide)"
-        style={layoutStyle}
-      >
-        {renderSidebar()}
-        {renderContent()}
-      </div>
-    )
-  }
-
   return (
     <LocaleContext.Provider value={currentLocale}>
       <RuntimeSlotsProvider slots={runtimeSlots} route={currentRoute}>
         <SectionProvider sections={sections} headerTopAreaRef={headerTopAreaRef}>
           <SectionHashSync hashScrollSuppressedUntilRef={hashScrollSuppressedUntilRef} />
-          {renderHeader()}
-          {renderLayout()}
+          <AppShellLayout
+            config={config}
+            routes={renderRoutes}
+            currentRoute={currentRoute}
+            currentLocale={currentLocale}
+            currentNavigation={currentNavigation}
+            notFoundRouteComponent={NotFoundRouteComponent}
+            layout={layout}
+            headerRef={headerRef}
+            headerTopAreaRef={headerTopAreaRef}
+            layoutConfig={layoutConfig}
+            pathname={pathname}
+            text={text}
+            activeBannerKey={activeBannerKey}
+            dismissedBannerKey={dismissedBannerKey}
+            bannerResolved={bannerResolved}
+            onDismissBanner={dismissBanner}
+          />
         </SectionProvider></RuntimeSlotsProvider>
     </LocaleContext.Provider>)
   
