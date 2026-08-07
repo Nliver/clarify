@@ -158,6 +158,8 @@ const clarifyPagesGroupSchema: z.ZodType<
 > = z.lazy(() => z.object({
   group: clarifyLocalizedTextSchema,
   icon: z.string().optional(),
+  visible: z.enum(['always', 'active', 'never']).optional(),
+  searchable: z.boolean().optional(),
   layout: z.enum(['documentation', 'blog']).optional(),
   pages: z.array(clarifyPagesItemSchema),
 }).strict())
